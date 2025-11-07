@@ -1,0 +1,66 @@
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+
+const addressSchema = new mongoose.Schema({
+  fullName: { type: String, required: true },
+  phone: { type: String, required: true },
+  addressLine1: { type: String, required: true },
+  addressLine2: String,
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  pincode: { type: String, required: true },
+  isDefault: { type: Boolean, default: false },
+});
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please enter your name'],
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'Please enter your email'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Please enter your password'],
+      minlength: 6,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: String,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    addresses: [addressSchema],
+  },
+  { timestamps: true }
+);
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+const User = mongoose.model('User', userSchema);
+
+export default User;
