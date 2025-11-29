@@ -1,31 +1,32 @@
 import nodemailer from 'nodemailer';
 
 const createTransporter = () => {
-  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
     return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: process.env.EMAIL_PORT || 587,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: process.env.SMTP_PORT || 587,
       secure: false,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
   }
-  console.warn('Email credentials not configured. Email services will not work.');
+
+  console.warn('SMTP credentials not configured. Email services will not work.');
   return null;
 };
 
 export const sendEmail = async (options) => {
   const transporter = createTransporter();
-  
+
   if (!transporter) {
     console.error('Email transporter not configured');
     return false;
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+    from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: options.to,
     subject: options.subject,
     html: options.html,
