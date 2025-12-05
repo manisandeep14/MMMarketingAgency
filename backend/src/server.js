@@ -12,6 +12,7 @@ import cartRoutes from './routes/cartRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import adminInviteRoutes from './routes/adminInviteRoutes.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/api/admin/invites', adminInviteRoutes);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,

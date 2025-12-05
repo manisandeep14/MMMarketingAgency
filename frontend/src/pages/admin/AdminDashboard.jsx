@@ -118,6 +118,9 @@ const AdminDashboard = () => {
             <Link to="/admin/users" className="block w-full btn-secondary text-center">
               Manage Users
             </Link>
+            <Link to="/admin/invites" className="block w-full btn-secondary text-center">
+              Invite Admins
+            </Link>
           </div>
         </div>
       </div>

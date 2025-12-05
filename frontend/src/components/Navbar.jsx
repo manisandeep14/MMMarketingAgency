@@ -21,14 +21,21 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden md:flex space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-primary-600">Home</Link>
-            <Link to="/products" className="text-gray-700 hover:text-primary-600">Products</Link>
+            <Link to="/" className="text-gray-700 hover:text-primary-600">
+              Home
+            </Link>
+            <Link to="/products" className="text-gray-700 hover:text-primary-600">
+              Products
+            </Link>
           </div>
 
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <Link to="/cart" className="relative text-gray-700 hover:text-primary-600">
+                <Link
+                  to="/cart"
+                  className="relative text-gray-700 hover:text-primary-600"
+                >
                   <FaShoppingCart size={20} />
                   {cart?.items?.length > 0 && (
                     <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -36,7 +43,10 @@ const Navbar = () => {
                     </span>
                   )}
                 </Link>
-                <Link to="/wishlist" className="text-gray-700 hover:text-primary-600">
+                <Link
+                  to="/wishlist"
+                  className="text-gray-700 hover:text-primary-600"
+                >
                   <FaHeart size={20} />
                 </Link>
                 <div className="relative group">
@@ -45,19 +55,57 @@ const Navbar = () => {
                     <span>{user?.name}</span>
                   </button>
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
-                    <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-                    <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Orders</Link>
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Orders
+                    </Link>
+
+                    {/* Admin-only links */}
                     {user?.role === 'admin' && (
-                      <Link to="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</Link>
+                      <>
+                        <Link
+                          to="/admin"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Admin Dashboard
+                        </Link>
+                        <Link
+                          to="/admin/invites"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Invite Admins
+                        </Link>
+                      </>
                     )}
-                    <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
                   </div>
                 </div>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-primary-600">Login</Link>
-                <Link to="/register" className="btn-primary">Register</Link>
+                <Link
+                  to="/login"
+                  className="text-gray-700 hover:text-primary-600"
+                >
+                  Login
+                </Link>
+                <Link to="/register" className="btn-primary">
+                  Register
+                </Link>
               </>
             )}
           </div>

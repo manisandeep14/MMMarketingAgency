@@ -14,12 +14,15 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
+import AdminInviteAccept from './pages/AdminInviteAccept';
 import ResetPassword from './pages/ResetPassword';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
+import AdminInvites from './pages/admin/AdminInvites';
+
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -45,6 +48,7 @@ function App() {
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/admin-invite/:token" element={<AdminInviteAccept />} />
           
           <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
           <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
@@ -57,6 +61,16 @@ function App() {
           <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          <Route path="/admin/invites" element={<AdminRoute><AdminInvites /></AdminRoute>}/>
+          <Route
+            path="/admin/invites"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminInvites />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
       </main>
       <Footer />
