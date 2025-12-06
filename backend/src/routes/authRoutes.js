@@ -24,8 +24,10 @@ router.post('/reset-password/:token', resetPassword);
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 
-router.post('/addresses', protect, addAddress);
-router.put('/addresses/:addressId', protect, updateAddress);
-router.delete('/addresses/:addressId', protect, deleteAddress);
+// Address routes (protected)
+router.post('/address', protect, addAddress);
+router.put('/address/:addressId', protect, updateAddress);
+router.delete('/address/:addressId', protect, deleteAddress);
+
 
 export default router;

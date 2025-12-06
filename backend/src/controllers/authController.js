@@ -212,21 +212,21 @@ export const updateProfile = async (req, res) => {
 export const addAddress = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    
+
     if (req.body.isDefault) {
       user.addresses.forEach((addr) => (addr.isDefault = false));
     }
-    
+
     user.addresses.push(req.body);
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Address added successfully',
-      addresses: user.addresses,
+      user,  // 🔴 IMPORTANT
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -237,7 +237,9 @@ export const updateAddress = async (req, res) => {
 
     const address = user.addresses.id(addressId);
     if (!address) {
-      return res.status(404).json({ success: false, message: 'Address not found' });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Address not found' });
     }
 
     if (req.body.isDefault) {
@@ -247,13 +249,13 @@ export const updateAddress = async (req, res) => {
     Object.assign(address, req.body);
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Address updated successfully',
-      addresses: user.addresses,
+      user,  // 🔴 IMPORTANT
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -265,12 +267,14 @@ export const deleteAddress = async (req, res) => {
     user.addresses.pull(addressId);
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: 'Address deleted successfully',
-      addresses: user.addresses,
+      user,  // 🔴 IMPORTANT
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
