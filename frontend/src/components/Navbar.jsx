@@ -1,118 +1,75 @@
-import { Link } from 'react-router-dom';
+// frontend/src/components/Navbar.jsx
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaShoppingCart, FaHeart, FaUser } from 'react-icons/fa';
 import { logout } from '../redux/slices/authSlice';
 
-const Navbar = () => {
+export default function Navbar() {
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { cart } = useSelector((state) => state.cart);
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((s) => s.auth);
+  const { cart } = useSelector((s) => s.cart || {});
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-primary-600">
-            MM Furniture
+    <nav className="bg-white shadow-sm sticky top-0 z-40">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-md bg-gradient-to-br from-sky-300 to-indigo-500 flex items-center justify-center text-white font-bold">
+              MM
+            </div>
+            <div className="text-lg font-semibold text-slate-800">MM Furniture</div>
+          </Link>
+        </div>
+
+        <div className="hidden md:flex items-center gap-8 text-slate-700">
+          <Link to="/" className="hover:text-sky-600">Home</Link>
+          <Link to="/products" className="hover:text-sky-600">Products</Link>
+          <Link to="/about" className="hover:text-sky-600">About</Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Link to="/cart" className="relative text-slate-700 hover:text-sky-600">
+            <FaShoppingCart />
+            {cart?.items?.length > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                {cart.items.length}
+              </span>
+            )}
           </Link>
 
-          <div className="hidden md:flex space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-primary-600">
-              Home
-            </Link>
-            <Link to="/products" className="text-gray-700 hover:text-primary-600">
-              Products
-            </Link>
-          </div>
+          <Link to="/wishlist" className="text-slate-700 hover:text-sky-600">
+            <FaHeart />
+          </Link>
 
-          <div className="flex items-center space-x-4">
-            {isAuthenticated ? (
-              <>
-                <Link
-                  to="/cart"
-                  className="relative text-gray-700 hover:text-primary-600"
-                >
-                  <FaShoppingCart size={20} />
-                  {cart?.items?.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {cart.items.length}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to="/wishlist"
-                  className="text-gray-700 hover:text-primary-600"
-                >
-                  <FaHeart size={20} />
-                </Link>
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 text-gray-700 hover:text-primary-600">
-                    <FaUser size={20} />
-                    <span>{user?.name}</span>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Profile
-                    </Link>
-                    <Link
-                      to="/orders"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Orders
-                    </Link>
+          {isAuthenticated ? (
+            <div className="relative group">
+              <button className="flex items-center gap-2 text-slate-700">
+                <FaUser />
+                <span className="hidden md:inline">{user?.name?.split(' ')[0]}</span>
+              </button>
 
-                    {/* Admin-only links */}
-                    {user?.role === 'admin' && (
-                      <>
-                        <Link
-                          to="/admin"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Admin Dashboard
-                        </Link>
-                        <Link
-                          to="/admin/invites"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Invite Admins
-                        </Link>
-                      </>
-                    )}
-
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="text-gray-700 hover:text-primary-600"
-                >
-                  Login
-                </Link>
-                <Link to="/register" className="btn-primary">
-                  Register
-                </Link>
-              </>
-            )}
-          </div>
+              <div className="absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-md py-1 hidden group-hover:block">
+                <Link to="/profile" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Profile</Link>
+                {user?.role === 'admin' && (
+                  <Link to="/admin" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Admin</Link>
+                )}
+                <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Logout</button>
+              </div>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-3">
+              <Link to="/login" className="text-slate-700 hover:text-sky-600">Login</Link>
+              <Link to="/register" className="px-4 py-2 rounded-lg bg-sky-500 text-white hover:bg-sky-600">Register</Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}
