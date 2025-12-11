@@ -1,3 +1,4 @@
+// frontend/src/pages/Products.jsx
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +12,7 @@ const Products = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, loading } = useSelector((state) => state.products);
-  
+
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || 'All',
     search: searchParams.get('search') || '',
@@ -22,13 +23,14 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const fetchProducts = async () => {
     try {
       dispatch(setLoading(true));
       const params = new URLSearchParams();
-      
+
       if (filters.category !== 'All') params.append('category', filters.category);
       if (filters.search) params.append('search', filters.search);
       if (filters.minPrice) params.append('minPrice', filters.minPrice);
@@ -53,88 +55,117 @@ const Products = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Our Products</h1>
+    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
+      <div className="max-w-7xl mx-auto px-4 pt-8">
+        <h1 className="text-4xl font-extrabold mb-6 text-slate-900">Our Products</h1>
 
-      <div className="flex flex-col md:flex-row gap-8">
-        <aside className="md:w-64 flex-shrink-0">
-          <div className="card p-6 sticky top-24">
-            <h2 className="text-xl font-semibold mb-4">Filters</h2>
-            
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="input-field"
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
-              />
-            </div>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar */}
+          <aside className="lg:w-72 flex-shrink-0">
+            <div className="sticky top-24 bg-white/80 backdrop-blur p-6 rounded-2xl shadow-sm border border-sky-100">
+              <h2 className="text-xl font-semibold mb-4">Filters</h2>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-              <select
-                className="input-field"
-                value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
-              <div className="flex gap-2">
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-slate-600 mb-2">Search</label>
                 <input
-                  type="number"
-                  placeholder="Min"
-                  className="input-field"
-                  value={filters.minPrice}
-                  onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                />
-                <input
-                  type="number"
-                  placeholder="Max"
-                  className="input-field"
-                  value={filters.maxPrice}
-                  onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+                  type="text"
+                  placeholder="Search products..."
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
                 />
               </div>
-            </div>
 
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
-              <select
-                className="input-field"
-                value={filters.sort}
-                onChange={(e) => handleFilterChange('sort', e.target.value)}
-              >
-                <option value="newest">Newest</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-              </select>
-            </div>
-          </div>
-        </aside>
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-slate-600 mb-2">Category</label>
+                <select
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  value={filters.category}
+                  onChange={(e) => handleFilterChange('category', e.target.value)}
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
 
-        <div className="flex-1">
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading products...</p>
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-slate-600 mb-2">Price Range</label>
+                <div className="flex gap-3">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    className="w-1/2 px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={filters.minPrice}
+                    onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    className="w-1/2 px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={filters.maxPrice}
+                    onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-5">
+                <label className="block text-sm font-medium text-slate-600 mb-2">Sort By</label>
+                <select
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                  value={filters.sort}
+                  onChange={(e) => handleFilterChange('sort', e.target.value)}
+                >
+                  <option value="newest">Newest</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                </select>
+              </div>
+
+              {/* Buttons kept simple so existing toggle/drop styling stays same */}
+              <div className="flex gap-3 mt-2">
+                <button
+                  onClick={() => fetchProducts()}
+                  className="flex-1 px-4 py-2 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition"
+                >
+                  Apply
+                </button>
+                <button
+                  onClick={() => {
+                    handleFilterChange('category', 'All');
+                    handleFilterChange('search', '');
+                    handleFilterChange('minPrice', '');
+                    handleFilterChange('maxPrice', '');
+                    handleFilterChange('sort', 'newest');
+                  }}
+                  className="flex-1 px-4 py-2 rounded-full border border-sky-100 text-slate-700 hover:bg-sky-50 transition"
+                >
+                  Clear
+                </button>
+              </div>
             </div>
-          ) : products.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-gray-600">No products found</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <Link key={product._id} to={`/products/${product._id}`} className="card">
-                  <div className="aspect-square bg-gray-200 overflow-hidden">
+          </aside>
+
+          {/* Products Grid */}
+          <div className="flex-1">
+            {loading ? (
+              <div className="text-center py-20">
+                <div className="inline-block animate-spin rounded-full h-14 w-14 border-4 border-t-sky-500 border-slate-200"></div>
+                <p className="mt-4 text-slate-600">Loading products...</p>
+              </div>
+            ) : products.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-xl text-slate-600">No products found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {products.map((product) => (
+                  <Link
+                  key={product._id}
+                  to={`/products/${product._id}`}
+                  className="bg-gradient-to-br from-sky-50 to-white backdrop-blur-sm rounded-2xl border border-sky-200 shadow-md hover:shadow-xl hover:-translate-y-2 transition transform p-4"
+                >
+                  <div className="relative aspect-square bg-gray-200 overflow-hidden rounded-xl border border-sky-100">
                     {product.images && product.images[0] ? (
                       <img
                         src={product.images[0].url}
@@ -146,24 +177,38 @@ const Products = () => {
                         No Image
                       </div>
                     )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-2 line-clamp-1">{product.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-primary-600 font-bold text-xl">₹{product.price.toLocaleString()}</span>
-                      <span className="text-sm text-gray-500">{product.category}</span>
+
+                    {/* CATEGORY PILL */}
+                    <div className="absolute top-3 right-3 bg-white/90 px-3 py-1 text-sm rounded-full shadow border border-sky-200">
+                      {product.category}
                     </div>
-                    {product.stock === 0 && (
-                      <span className="text-red-500 text-sm font-semibold">Out of Stock</span>
-                    )}
+                  </div>
+
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-lg mb-1 line-clamp-1">{product.name}</h3>
+                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sky-600 font-bold text-xl">
+                        ₹{product.price.toLocaleString()}
+                      </span>
+
+                      <span className="text-sm text-gray-500">
+                        {product.stock === 0 ? "Out of stock" : "In stock"}
+                      </span>
+                    </div>
                   </div>
                 </Link>
-              ))}
-            </div>
-          )}
+
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      
+      
     </div>
   );
 };
