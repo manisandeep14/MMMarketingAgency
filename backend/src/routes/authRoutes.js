@@ -25,7 +25,7 @@ router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 
 // Address routes (protected)
-router.post('/address', protect, addAddress);
+router.post('/addresses', protect, addAddress);
 router.put('/address/:addressId', protect, updateAddress);
 router.delete('/address/:addressId', protect, deleteAddress);
 

@@ -74,12 +74,18 @@ const Cart = () => {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            {cart.items.map((item) => (
-              <div key={item.product._id} className="card flex gap-4 p-4 mb-4">
+            {cart.items
+              .filter((item) => item.product) // ⬅️ IMPORTANT
+              .map((item) => (
+              <div key={item.product._id || item._id} className="card flex gap-4 p-4 mb-4">
                 <Link to={`/products/${item.product._id}`} className="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                   {item.product.images && item.product.images[0] ? (
                     <img
-                      src={item.product.images[0].url}
+                      src={
+                        item.product.images?.[0]?.url ||
+                        item.product.images?.[0]?.secure_url ||
+                        "/images/placeholder.png"
+                      }
                       alt={item.product.name}
                       className="w-full h-full object-cover"
                     />

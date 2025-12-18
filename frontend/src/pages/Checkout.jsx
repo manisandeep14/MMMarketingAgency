@@ -3,9 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import api from '../utils/api';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/slices/authSlice';
+
+
+
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(true);
@@ -49,27 +55,32 @@ const Checkout = () => {
     }, 0) || 0;
   };
 
+  const validItems = cart.items?.filter(item => item.product) || [];
+
+
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await api.post('/auth/addresses', addressForm);
-      toast.success('Address added successfully');
-      setSelectedAddress(response.data.addresses[response.data.addresses.length - 1]);
-      setShowAddressForm(false);
-      setAddressForm({
-        fullName: '',
-        phone: '',
-        addressLine1: '',
-        addressLine2: '',
-        city: '',
-        state: '',
-        pincode: '',
-        isDefault: false,
-      });
+      const res = await api.post('/auth/addresses', addressForm);
+
+      if (res.data?.success && res.data.user) {
+        dispatch(setUser(res.data.user));
+        toast.success('Address added successfully');
+
+        const newAddress =
+          res.data.user.addresses[res.data.user.addresses.length - 1];
+
+        setSelectedAddress(newAddress);
+        setShowAddressForm(false);
+      }
     } catch (error) {
-      toast.error('Failed to add address');
+      toast.error(error.response?.data?.message || 'Failed to add address');
     }
   };
+
+
+
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -291,14 +302,15 @@ const Checkout = () => {
           <div className="card p-6">
             <h2 className="text-xl font-semibold mb-4">Order Items</h2>
             <div className="space-y-4">
-              {cart.items.map((item) => (
+              {validItems.map((item) => (
+
                 <div key={item.product._id} className="flex gap-4 pb-4 border-b">
                   <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                    {item.product.images && item.product.images[0] ? (
+                    {item.product?.images?.[0]?.url ? (
+
                       <img
                         src={item.product.images[0].url}
                         alt={item.product.name}
-                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
@@ -323,8 +335,8 @@ const Checkout = () => {
             
             <div className="space-y-3 mb-6">
               <div className="flex justify-between">
-                <span>Subtotal ({cart.items.length} items)</span>
-                <span>₹{calculateTotal().toLocaleString()}</span>
+                <span>Subtotal ({validItems.length} items)</span>
+                <span>₹{calculateTotal().toLocaleString()}</span> 
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
