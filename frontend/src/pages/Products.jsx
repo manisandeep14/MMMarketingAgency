@@ -27,7 +27,7 @@ const Products = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, loading } = useSelector((state) => state.products);
-
+  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     category: searchParams.get("category") || "All",
     search: searchParams.get("search") || "",
@@ -35,6 +35,7 @@ const Products = () => {
     maxPrice: "",
     sort: "newest",
   });
+
 
   useEffect(() => {
     fetchProducts();
@@ -72,96 +73,111 @@ const Products = () => {
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
       <div className="max-w-7xl mx-auto px-4 pt-8">
-        <h1 className="text-4xl font-extrabold mb-6 text-slate-900">Our Products</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-4xl font-extrabold text-slate-900">Our Products</h1>
+
+          <button
+            onClick={() => setShowFilters((prev) => !prev)}
+            className="flex items-center gap-2 px-4 py-2 rounded-full border border-sky-200 text-sky-600 font-semibold hover:bg-sky-50 transition"
+          >
+            {showFilters ? "✕ Close Filters" : "☰ Filters"}
+          </button>
+        </div>
+
 
         <div className="flex flex-col lg:flex-row gap-8">
           
-          {/* SIDEBAR */}
-          <aside className="lg:w-72 flex-shrink-0">
-            <div className="sticky top-24 bg-white/80 backdrop-blur p-6 rounded-2xl shadow-sm border border-sky-100">
-              <h2 className="text-xl font-semibold mb-4">Filters</h2>
+          {/* FILTER SIDEBAR (TOGGLE) */}
+          {showFilters && (
+            <aside className="lg:w-72 flex-shrink-0">
+              <div className="sticky top-24 bg-white/80 backdrop-blur p-6 rounded-2xl shadow-sm border border-sky-100">
+                <h2 className="text-xl font-semibold mb-4">Filters</h2>
 
-              <div className="mb-5">
-                <label className="block text-sm font-medium text-slate-600 mb-2">Search</label>
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                />
-              </div>
-
-              <div className="mb-5">
-                <label className="block text-sm font-medium text-slate-600 mb-2">Category</label>
-                <select
-                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                  value={filters.category}
-                  onChange={(e) => handleFilterChange("category", e.target.value)}
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-5">
-                <label className="block text-sm font-medium text-slate-600 mb-2">Price Range</label>
-                <div className="flex gap-3">
+                {/* Search */}
+                <div className="mb-5">
+                  <label className="block text-sm font-medium text-slate-600 mb-2">Search</label>
                   <input
-                    type="number"
-                    placeholder="Min"
-                    className="w-1/2 px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                    value={filters.minPrice}
-                    onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    className="w-1/2 px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                    value={filters.maxPrice}
-                    onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                    type="text"
+                    placeholder="Search products..."
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={filters.search}
+                    onChange={(e) => handleFilterChange("search", e.target.value)}
                   />
                 </div>
-              </div>
 
-              <div className="mb-5">
-                <label className="block text-sm font-medium text-slate-600 mb-2">Sort By</label>
-                <select
-                  className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                  value={filters.sort}
-                  onChange={(e) => handleFilterChange("sort", e.target.value)}
-                >
-                  <option value="newest">Newest</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                </select>
-              </div>
+                {/* Category */}
+                <div className="mb-5">
+                  <label className="block text-sm font-medium text-slate-600 mb-2">Category</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
+                    value={filters.category}
+                    onChange={(e) => handleFilterChange("category", e.target.value)}
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
 
-              <div className="flex gap-3 mt-2">
-                <button
-                  onClick={() => fetchProducts()}
-                  className="flex-1 px-4 py-2 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition"
-                >
-                  Apply
-                </button>
-                <button
-                  onClick={() => {
-                    handleFilterChange("category", "All");
-                    handleFilterChange("search", "");
-                    handleFilterChange("minPrice", "");
-                    handleFilterChange("maxPrice", "");
-                    handleFilterChange("sort", "newest");
-                  }}
-                  className="flex-1 px-4 py-2 rounded-full border border-sky-100 text-slate-700 hover:bg-sky-50 transition"
-                >
-                  Clear
-                </button>
+                {/* Price */}
+                <div className="mb-5">
+                  <label className="block text-sm font-medium text-slate-600 mb-2">Price Range</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      className="w-1/2 px-4 py-3 rounded-lg border border-slate-200"
+                      value={filters.minPrice}
+                      onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                    />
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      className="w-1/2 px-4 py-3 rounded-lg border border-slate-200"
+                      value={filters.maxPrice}
+                      onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Sort */}
+                <div className="mb-5">
+                  <label className="block text-sm font-medium text-slate-600 mb-2">Sort By</label>
+                  <select
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200"
+                    value={filters.sort}
+                    onChange={(e) => handleFilterChange("sort", e.target.value)}
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                  </select>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-3 mt-2">
+                  <button
+                    onClick={() => { fetchProducts(); setShowFilters(false); }}
+                    className="flex-1 px-4 py-2 rounded-full bg-sky-500 text-white font-semibold"
+                  >
+                    Apply
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleFilterChange("category", "All");
+                      handleFilterChange("search", "");
+                      handleFilterChange("minPrice", "");
+                      handleFilterChange("maxPrice", "");
+                      handleFilterChange("sort", "newest");
+                    }}
+                    className="flex-1 px-4 py-2 rounded-full border"
+                  >
+                    Clear
+                  </button>
+                </div>
               </div>
-            </div>
-          </aside>
+            </aside>
+          )}
 
           {/* PRODUCTS GRID */}
           <div className="flex-1">
