@@ -200,7 +200,7 @@ const Products = () => {
                     <Link
                       key={product._id}
                       to={`/products/${product._id}`}
-                      className="bg-gradient-to-br from-sky-50 to-white backdrop-blur-sm rounded-2xl border border-sky-200 shadow-md hover:shadow-xl hover:-translate-y-2 transition transform p-4"
+                      className="max-w-80 bg-gradient-to-br from-sky-50 to-white backdrop-blur-sm rounded-2xl border border-sky-200 shadow-md hover:shadow-xl hover:-translate-y-2 transition transform p-4" 
                     >
                       <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-200 border border-sky-100">
                         {mainImg ? (
