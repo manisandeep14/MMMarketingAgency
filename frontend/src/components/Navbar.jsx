@@ -50,64 +50,88 @@ const Navbar = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+    <nav className="sticky top-0 z-50 backdrop-blur bg-white/80 border-b border-sky-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold text-primary-600">
+
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent"
+          >
             MM Furniture
           </Link>
 
-          <div className="hidden md:flex space-x-6">
-            <Link to="/" className="text-gray-700 hover:text-primary-600">
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link
+              to="/"
+              className="font-medium text-slate-700 hover:text-sky-600 transition"
+            >
               Home
             </Link>
-            <Link to="/products" className="text-gray-700 hover:text-primary-600">
+            <Link
+              to="/products"
+              className="font-medium text-slate-700 hover:text-sky-600 transition"
+            >
               Products
             </Link>
           </div>
 
-          <div className="flex items-center space-x-4">
+          {/* RIGHT SECTION */}
+          <div className="flex items-center gap-4 sm:gap-5">
             {isAuthenticated ? (
               <>
-                <Link to="/cart" className="relative text-gray-700 hover:text-primary-600">
-                  <FaShoppingCart size={20} />
+                {/* CART */}
+                <Link
+                  to="/cart"
+                  className="relative text-slate-700 hover:text-sky-600 transition"
+                >
+                  <FaShoppingCart className="text-lg sm:text-xl" />
                   {cart?.items?.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 bg-sky-500 text-white text-[10px] sm:text-xs font-semibold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center shadow">
                       {cart.items.length}
                     </span>
                   )}
                 </Link>
-                <Link to="/wishlist" className="text-gray-700 hover:text-primary-600">
-                  <FaHeart size={20} />
+
+                {/* WISHLIST */}
+                <Link
+                  to="/wishlist"
+                  className="text-slate-700 hover:text-pink-500 transition"
+                >
+                  <FaHeart className="text-lg sm:text-xl" />
                 </Link>
 
-                {/* PROFILE BUTTON (click to open menu) */}
+                {/* PROFILE */}
                 <div className="relative">
                   <button
                     ref={buttonRef}
                     onClick={toggleMenu}
                     aria-expanded={menuOpen}
                     aria-haspopup="true"
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 outline-none focus:outline-none"
+                    className="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-full hover:bg-sky-50 text-slate-700 hover:text-sky-600 transition"
                   >
+                    <FaUser className="text-base sm:text-lg" />
 
-                    <FaUser size={20} />
-                    <span>{user?.name?.split(' ')[0] || 'Account'}</span>
+                    {/* 👇 HIDE NAME ON MOBILE */}
+                    <span className="hidden sm:inline font-medium">
+                      {user?.name?.split(' ')[0] || 'Account'}
+                    </span>
                   </button>
 
-                  {/* Menu - rendered on click */}
+                  {/* DROPDOWN */}
                   {menuOpen && (
                     <div
                       ref={menuRef}
                       role="menu"
-                      aria-label="Profile menu"
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50 ring-1 ring-black ring-opacity-5"
+                      className="absolute right-0 mt-2 sm:mt-3 w-44 sm:w-48 rounded-xl bg-white shadow-xl border border-sky-100 py-2 animate-fadeIn"
                     >
                       <Link
                         to="/profile"
                         role="menuitem"
                         onClick={() => setMenuOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-sky-50 transition"
                       >
                         Profile
                       </Link>
@@ -117,7 +141,7 @@ const Navbar = () => {
                           to="/admin"
                           role="menuitem"
                           onClick={() => setMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-sky-50 transition"
                         >
                           Admin
                         </Link>
@@ -125,8 +149,8 @@ const Navbar = () => {
 
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         role="menuitem"
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
                       >
                         Logout
                       </button>
@@ -136,10 +160,16 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-primary-600">
+                <Link
+                  to="/login"
+                  className="text-sm sm:text-base font-medium text-slate-700 hover:text-sky-600 transition"
+                >
                   Login
                 </Link>
-                <Link to="/register" className="btn-primary">
+                <Link
+                  to="/register"
+                  className="px-4 sm:px-5 py-2 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white text-sm sm:text-base font-semibold shadow hover:shadow-lg hover:scale-105 transition"
+                >
                   Register
                 </Link>
               </>
@@ -148,6 +178,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+
   );
 };
 

@@ -64,7 +64,7 @@ const Checkout = () => {
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/addresses", addressForm);
+      const res = await api.post("/auth/address", addressForm);
 
       if (res.data?.success && res.data.user) {
         dispatch(setUser(res.data.user));
@@ -177,28 +177,30 @@ const Checkout = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-sky-500 border-slate-200 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading checkout...</p>
+          <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-t-sky-500 border-slate-200 mx-auto"></div>
+          <p className="mt-4 text-sm sm:text-base text-slate-600">
+            Loading checkout...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
-      <div className="max-w-7xl mx-auto px-4 pt-8">
-        <h1 className="text-4xl font-extrabold mb-8 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
+        <h1 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-slate-900">
           Checkout
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+
           {/* LEFT SECTION */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-5 sm:space-y-6">
 
             {/* ADDRESS */}
-            <div className="bg-white/80 backdrop-blur rounded-2xl p-6 shadow border border-sky-100">
-              <h2 className="text-xl font-semibold mb-4">
+            <div className="bg-white/80 backdrop-blur rounded-2xl p-4 sm:p-6 shadow border border-sky-100">
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">
                 Delivery Address
               </h2>
 
@@ -207,7 +209,7 @@ const Checkout = () => {
                   {user.addresses.map((addr) => (
                     <label
                       key={addr._id}
-                      className={`block p-4 rounded-xl cursor-pointer border transition ${
+                      className={`block p-3 sm:p-4 rounded-xl cursor-pointer border transition ${
                         selectedAddress?._id === addr._id
                           ? "border-sky-400 bg-sky-50"
                           : "border-sky-100 hover:bg-sky-50"
@@ -221,7 +223,7 @@ const Checkout = () => {
                       />
                       <strong>{addr.fullName}</strong> – {addr.phone}
                       <br />
-                      <span className="text-slate-600 text-sm">
+                      <span className="text-slate-600 text-xs sm:text-sm">
                         {addr.addressLine1},{" "}
                         {addr.addressLine2 && `${addr.addressLine2}, `}
                         {addr.city}, {addr.state} – {addr.pincode}
@@ -234,7 +236,7 @@ const Checkout = () => {
               {!showAddressForm ? (
                 <button
                   onClick={() => setShowAddressForm(true)}
-                  className="w-full px-4 py-2 rounded-full border border-sky-200 hover:bg-sky-50 transition"
+                  className="w-full px-4 py-2 rounded-full border border-sky-200 hover:bg-sky-50 transition text-sm sm:text-base"
                 >
                   + Add New Address
                 </button>
@@ -243,7 +245,7 @@ const Checkout = () => {
                   onSubmit={handleAddressSubmit}
                   className="space-y-4 mt-4"
                 >
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <input
                       type="text"
                       placeholder="Full Name"
@@ -299,7 +301,7 @@ const Checkout = () => {
                     }
                   />
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <input
                       type="text"
                       placeholder="City"
@@ -341,7 +343,7 @@ const Checkout = () => {
                     />
                   </div>
 
-                  <div className="flex gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <button className="flex-1 btn-primary">
                       Save Address
                     </button>
@@ -358,8 +360,8 @@ const Checkout = () => {
             </div>
 
             {/* ORDER ITEMS */}
-            <div className="bg-white/80 backdrop-blur rounded-2xl p-6 shadow border border-sky-100">
-              <h2 className="text-xl font-semibold mb-4">
+            <div className="bg-white/80 backdrop-blur rounded-2xl p-4 sm:p-6 shadow border border-sky-100">
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">
                 Order Items
               </h2>
 
@@ -369,7 +371,7 @@ const Checkout = () => {
                     key={item.product._id}
                     className="flex gap-4 pb-4 border-b border-sky-100"
                   >
-                    <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-100">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100">
                       {item.product.images?.[0]?.url ? (
                         <img
                           src={item.product.images[0].url}
@@ -384,13 +386,13 @@ const Checkout = () => {
                     </div>
 
                     <div className="flex-1">
-                      <h3 className="font-semibold">
+                      <h3 className="font-semibold text-sm sm:text-base">
                         {item.product.name}
                       </h3>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-xs sm:text-sm text-slate-500">
                         Qty: {item.quantity}
                       </p>
-                      <p className="text-sky-600 font-bold">
+                      <p className="text-sky-600 font-bold text-sm sm:text-base">
                         ₹
                         {(
                           item.product.price * item.quantity
@@ -405,12 +407,12 @@ const Checkout = () => {
 
           {/* RIGHT SUMMARY */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg border border-sky-100">
-              <h2 className="text-xl font-semibold mb-4">
+            <div className="sticky top-24 bg-white/80 backdrop-blur rounded-2xl p-4 sm:p-6 shadow-lg border border-sky-100">
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">
                 Order Summary
               </h2>
 
-              <div className="space-y-3 mb-6">
+              <div className="space-y-3 mb-6 text-sm sm:text-base">
                 <div className="flex justify-between">
                   <span>Subtotal ({validItems.length})</span>
                   <span>
@@ -423,7 +425,7 @@ const Checkout = () => {
                     FREE
                   </span>
                 </div>
-                <div className="border-t pt-4 flex justify-between font-bold text-lg">
+                <div className="border-t pt-4 flex justify-between font-bold">
                   <span>Total</span>
                   <span className="text-sky-600">
                     ₹{calculateTotal().toLocaleString()}

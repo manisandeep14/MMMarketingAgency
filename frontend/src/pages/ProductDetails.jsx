@@ -8,8 +8,6 @@ import { setProduct, setLoading } from "../redux/slices/productSlice";
 import { setCart } from "../redux/slices/cartSlice";
 import { setWishlist } from "../redux/slices/wishlistSlice";
 import api from "../utils/api";
-import Cart from "./Cart";
-
 
 // ✅ Normalize backend image formats
 const normalizeImages = (images) => {
@@ -26,7 +24,7 @@ const normalizeImages = (images) => {
         url: img.url || img.secure_url || null,
       };
     })
-    .filter((i) => i.url); // keep only valid URLs
+    .filter((i) => i.url);
 };
 
 const ProductDetails = () => {
@@ -62,7 +60,9 @@ const ProductDetails = () => {
   const imgs = normalizeImages(product?.images || []);
   const mainImage = imgs[selectedImage]?.url || imgs[0]?.url;
 
-  const isInWishlist = wishlist?.products?.some((p) => p._id === product?._id);
+  const isInWishlist = wishlist?.products?.some(
+    (p) => p._id === product?._id
+  );
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -85,19 +85,15 @@ const ProductDetails = () => {
 
   const handleBuyNow = async () => {
     try {
-      // 1️⃣ Add product to cart
-      await api.post('/cart', {
+      await api.post("/cart", {
         productId: product._id,
-        quantity: quantity, // your selected quantity state
+        quantity,
       });
-
-      // 2️⃣ Redirect directly to checkout
-      navigate('/checkout');
+      navigate("/checkout");
     } catch (error) {
-      toast.error('Failed to proceed to checkout');
+      toast.error("Failed to proceed to checkout");
     }
   };
-
 
   const handleWishlistToggle = async () => {
     if (!isAuthenticated) {
@@ -112,7 +108,9 @@ const ProductDetails = () => {
         dispatch(setWishlist(response.data.wishlist));
         toast.success("Removed from wishlist");
       } else {
-        const response = await api.post("/wishlist", { productId: product._id });
+        const response = await api.post("/wishlist", {
+          productId: product._id,
+        });
         dispatch(setWishlist(response.data.wishlist));
         toast.success("Added to wishlist!");
       }
@@ -124,32 +122,34 @@ const ProductDetails = () => {
   if (loading || !product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-sky-500 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading product...</p>
+        <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-sky-500 mx-auto"></div>
+        <p className="mt-4 text-sm sm:text-base text-gray-600">
+          Loading product...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        
+    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
+
         {/* Back button */}
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-sky-100 shadow-sm hover:shadow-md"
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm sm:text-base rounded-lg bg-white border border-sky-100 shadow-sm hover:shadow-md"
           >
             <FaArrowLeft />
             Back
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-start">
 
-          {/* LEFT SECTION - Main Image + Thumbnails */}
+          {/* LEFT SECTION */}
           <div>
-            <div className="bg-white rounded-2xl p-4 shadow-md border border-sky-100">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-md border border-sky-100">
               <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
                 {mainImage ? (
                   <img
@@ -158,7 +158,7 @@ const ProductDetails = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                     No Image
                   </div>
                 )}
@@ -166,15 +166,15 @@ const ProductDetails = () => {
 
               {/* Thumbnails */}
               {imgs.length > 1 && (
-                <div className="mt-4 flex gap-3">
+                <div className="mt-3 sm:mt-4 flex gap-2 sm:gap-3 overflow-x-auto">
                   {imgs.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
-                      className={`w-20 h-20 rounded-lg overflow-hidden border transition-transform transform ${
+                      className={`w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden border transition ${
                         selectedImage === idx
-                          ? "ring-2 ring-sky-300 border-sky-300 -translate-y-1 shadow-md"
-                          : "border-transparent hover:-translate-y-1 hover:shadow-sm"
+                          ? "ring-2 ring-sky-300 border-sky-300"
+                          : "border-transparent"
                       }`}
                     >
                       <img
@@ -189,27 +189,31 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* RIGHT SECTION - Details */}
-          <div className="bg-white rounded-2xl p-8 shadow-md border border-sky-100">
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-3 text-slate-900">
+          {/* RIGHT SECTION */}
+          <div className="bg-white rounded-2xl p-4 sm:p-8 shadow-md border border-sky-100">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3 text-slate-900">
               {product.name}
             </h1>
 
-            <div className="flex items-start md:items-center gap-4 mb-6">
-              <div className="text-4xl md:text-5xl font-bold text-sky-600">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-sky-600">
                 ₹{product.price.toLocaleString()}
               </div>
-              <div className="px-3 py-1 bg-sky-50 text-sky-600 rounded-full text-sm">
+              <div className="px-3 py-1 bg-sky-50 text-sky-600 rounded-full text-xs sm:text-sm w-fit">
                 {product.category}
               </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-slate-700 mb-2">Description</h3>
-              <p className="text-slate-600">{product.description}</p>
+            <div className="mb-4 sm:mb-6">
+              <h3 className="text-xs sm:text-sm font-semibold text-slate-700 mb-1 sm:mb-2">
+                Description
+              </h3>
+              <p className="text-sm sm:text-base text-slate-600">
+                {product.description}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 text-slate-700 mb-6">
+            <div className="grid grid-cols-1 gap-2 sm:gap-3 text-sm sm:text-base text-slate-700 mb-4 sm:mb-6">
               {product.material && (
                 <p><strong>Material:</strong> {product.material}</p>
               )}
@@ -219,14 +223,16 @@ const ProductDetails = () => {
               {product.dimensions && (
                 <p>
                   <strong>Dimensions:</strong>{" "}
-                  {product.dimensions.length} × {product.dimensions.width} × {product.dimensions.height}{" "}
-                  {product.dimensions.unit}
+                  {product.dimensions.length} × {product.dimensions.width} ×{" "}
+                  {product.dimensions.height} {product.dimensions.unit}
                 </p>
               )}
               <p>
                 <strong>Stock:</strong>{" "}
                 {product.stock > 0 ? (
-                  <span className="text-green-600">{product.stock} available</span>
+                  <span className="text-green-600">
+                    {product.stock} available
+                  </span>
                 ) : (
                   <span className="text-red-600">Out of Stock</span>
                 )}
@@ -235,20 +241,24 @@ const ProductDetails = () => {
 
             {product.stock > 0 && (
               <>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">
                   Quantity
                 </label>
-                <div className="flex items-center gap-4 mb-4">
+                <div className="flex items-center gap-3 sm:gap-4 mb-4">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 text-lg font-semibold hover:bg-slate-100"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-slate-50 border border-slate-200 text-lg font-semibold"
                   >
                     -
                   </button>
-                  <div className="text-xl font-semibold w-12 text-center">{quantity}</div>
+                  <div className="text-lg sm:text-xl font-semibold w-10 sm:w-12 text-center">
+                    {quantity}
+                  </div>
                   <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-12 h-12 rounded-lg bg-slate-50 border border-slate-200 text-lg font-semibold hover:bg-slate-100"
+                    onClick={() =>
+                      setQuantity(Math.min(product.stock, quantity + 1))
+                    }
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-slate-50 border border-slate-200 text-lg font-semibold"
                   >
                     +
                   </button>
@@ -256,26 +266,27 @@ const ProductDetails = () => {
               </>
             )}
 
-            <div className="flex items-center gap-4">
+            {/* ACTION BUTTONS */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-4">
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-sky-600 text-white font-semibold hover:bg-sky-700 transition"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-lg bg-sky-600 text-white font-semibold"
               >
-                <FaShoppingCart /> {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+                <FaShoppingCart />
+                {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
               </button>
 
               <button
                 onClick={handleBuyNow}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-sky-600 text-white font-semibold hover:bg-sky-700 transition"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-lg bg-sky-600 text-white font-semibold"
               >
-                 Buy Now
+                Buy Now
               </button>
-
 
               <button
                 onClick={handleWishlistToggle}
-                className="w-14 h-12 rounded-lg bg-white border border-sky-100 flex items-center justify-center shadow-sm hover:shadow-md"
+                className="w-full sm:w-14 h-12 rounded-lg bg-white border border-sky-100 flex items-center justify-center shadow-sm"
               >
                 {isInWishlist ? (
                   <FaHeart className="text-red-500" />
@@ -285,7 +296,7 @@ const ProductDetails = () => {
               </button>
             </div>
 
-            <p className="text-sm text-slate-500 mt-4">
+            <p className="text-xs sm:text-sm text-slate-500 mt-4">
               By ordering you agree to our terms and shipping time. Need help?{" "}
               <button
                 onClick={() => navigate("/contact")}

@@ -116,26 +116,28 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
-      <div className="max-w-5xl mx-auto px-4 pt-8">
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-10">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-6 sm:mb-10">
           My Profile
         </h1>
 
         {/* PROFILE CARD */}
-        <div className="bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm p-8 mb-8">
-          <div className="flex flex-col sm:flex-row items-center gap-6 mb-8">
+        <div className="bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm p-4 sm:p-8 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 mb-6 sm:mb-8">
             {/* Avatar */}
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 text-white flex items-center justify-center text-3xl font-bold shadow-lg">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 text-white flex items-center justify-center text-2xl sm:text-3xl font-bold shadow-lg">
               {user?.name?.charAt(0)?.toUpperCase()}
             </div>
 
             <div className="flex-1 text-center sm:text-left">
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
                 {user?.name}
               </h2>
-              <p className="text-slate-600">{user?.email}</p>
-              <span className="inline-block mt-2 px-4 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-700">
+              <p className="text-sm sm:text-base text-slate-600">
+                {user?.email}
+              </p>
+              <span className="inline-block mt-2 px-3 sm:px-4 py-1 rounded-full text-xs font-semibold bg-sky-100 text-sky-700">
                 {user?.role}
               </span>
             </div>
@@ -143,7 +145,7 @@ const Profile = () => {
             {!editMode && (
               <button
                 onClick={() => setEditMode(true)}
-                className="px-6 py-2 rounded-full border border-sky-200 text-slate-700 hover:bg-sky-50 transition"
+                className="px-5 py-2 text-sm sm:text-base rounded-full border border-sky-200 text-slate-700 hover:bg-sky-50 transition"
               >
                 Edit Profile
               </button>
@@ -151,14 +153,18 @@ const Profile = () => {
           </div>
 
           {!editMode ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <p className="text-sm text-slate-500">Name</p>
-                <p className="text-lg font-medium">{user?.name}</p>
+                <p className="text-xs sm:text-sm text-slate-500">Name</p>
+                <p className="text-base sm:text-lg font-medium">
+                  {user?.name}
+                </p>
               </div>
               <div>
-                <p className="text-sm text-slate-500">Email</p>
-                <p className="text-lg font-medium">{user?.email}</p>
+                <p className="text-xs sm:text-sm text-slate-500">Email</p>
+                <p className="text-base sm:text-lg font-medium">
+                  {user?.email}
+                </p>
               </div>
             </div>
           ) : (
@@ -181,8 +187,10 @@ const Profile = () => {
                 required
               />
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="flex-1 btn-primary">Save Changes</button>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <button className="flex-1 btn-primary">
+                  Save Changes
+                </button>
                 <button
                   type="button"
                   className="flex-1 btn-secondary"
@@ -202,10 +210,12 @@ const Profile = () => {
         </div>
 
         {/* ADDRESSES */}
-        <div className="bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold">Saved Addresses</h2>
-            <button onClick={openAddAddress} className="btn-primary">
+        <div className="bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm p-4 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <h2 className="text-xl sm:text-2xl font-semibold">
+              Saved Addresses
+            </h2>
+            <button onClick={openAddAddress} className="btn-primary w-full sm:w-auto">
               + Add Address
             </button>
           </div>
@@ -249,16 +259,18 @@ const Profile = () => {
               ))}
             </div>
           ) : (
-            <p className="text-slate-600">No saved addresses</p>
+            <p className="text-slate-600 text-sm">
+              No saved addresses
+            </p>
           )}
         </div>
       </div>
 
       {/* ADDRESS MODAL */}
       {showAddressModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
-            <h3 className="text-xl font-semibold mb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-3">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6">
+            <h3 className="text-lg sm:text-xl font-semibold mb-4">
               {editingAddress ? "Edit Address" : "Add New Address"}
             </h3>
 
@@ -293,7 +305,7 @@ const Profile = () => {
                 Set as default address
               </label>
 
-              <div className="flex gap-4 mt-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4">
                 <button className="flex-1 btn-primary">
                   {editingAddress ? "Save Changes" : "Add Address"}
                 </button>

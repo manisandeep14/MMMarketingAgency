@@ -53,16 +53,16 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50 px-3 sm:px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-xl border border-sky-100 p-8">
-          
+        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-xl border border-sky-100 p-6 sm:p-8">
+
           {/* HEADER */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-extrabold text-slate-900">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Create Account
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">
               Join{" "}
               <span className="font-semibold text-sky-600">
                 MM Furniture
@@ -72,9 +72,9 @@ const Register = () => {
           </div>
 
           {/* FORM */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                 Full Name
               </label>
               <input
@@ -84,12 +84,12 @@ const Register = () => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Your full name"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                 Email Address
               </label>
               <input
@@ -99,12 +99,12 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                 Password
               </label>
               <input
@@ -114,12 +114,12 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Minimum 6 characters"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                 Confirm Password
               </label>
               <input
@@ -129,20 +129,20 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Re-enter password"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md"
+              className="w-full py-2.5 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md text-sm sm:text-base"
             >
               Create Account
             </button>
           </form>
 
           {/* FOOTER */}
-          <p className="mt-6 text-center text-sm text-slate-600">
+          <p className="mt-6 text-center text-xs sm:text-sm text-slate-600">
             Already have an account?{" "}
             <Link
               to="/login"

@@ -53,23 +53,25 @@ const Wishlist = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-14 w-14 border-4 border-t-sky-500 border-slate-200"></div>
-          <p className="mt-4 text-slate-600">Loading wishlist...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 sm:h-14 sm:w-14 border-4 border-t-sky-500 border-slate-200"></div>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-600">
+            Loading wishlist...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
-      <div className="max-w-7xl mx-auto px-4 pt-8">
-        <h1 className="text-4xl font-extrabold mb-8 text-slate-900">
+    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
+        <h1 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-slate-900">
           My Wishlist
         </h1>
 
         {!wishlist.products || wishlist.products.length === 0 ? (
-          <div className="text-center py-16 bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm">
-            <p className="text-xl text-slate-600 mb-6">
+          <div className="text-center py-12 sm:py-16 bg-white/80 backdrop-blur rounded-2xl border border-sky-100 shadow-sm">
+            <p className="text-base sm:text-xl text-slate-600 mb-5 sm:mb-6">
               Your wishlist is empty
             </p>
             <Link
@@ -80,7 +82,7 @@ const Wishlist = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-8">
             {wishlist.products.map((product) => (
               <div
                 key={product._id}
@@ -97,34 +99,34 @@ const Wishlist = () => {
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                       No Image
                     </div>
                   )}
                 </Link>
 
-                <div className="p-4">
+                <div className="p-3 sm:p-4">
                   <Link
                     to={`/products/${product._id}`}
-                    className="font-semibold text-lg mb-1 block line-clamp-1 hover:text-sky-600 transition"
+                    className="font-semibold text-base sm:text-lg mb-1 block line-clamp-1 hover:text-sky-600 transition"
                   >
                     {product.name}
                   </Link>
 
-                  <p className="text-slate-600 text-sm mb-3 line-clamp-2">
+                  <p className="text-slate-600 text-xs sm:text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
 
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sky-600 font-bold text-xl">
+                    <span className="text-sky-600 font-bold text-lg sm:text-xl">
                       ₹{product.price.toLocaleString()}
                     </span>
-                    <span className="text-sm text-slate-500">
+                    <span className="text-xs sm:text-sm text-slate-500">
                       {product.category}
                     </span>
                   </div>
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <button
                       onClick={() => addToCart(product)}
                       disabled={product.stock === 0}
@@ -141,7 +143,7 @@ const Wishlist = () => {
 
                     <button
                       onClick={() => removeFromWishlist(product._id)}
-                      className="px-3 py-2 rounded-full border border-sky-200 text-slate-600 hover:bg-sky-50 transition"
+                      className="px-3 py-2 rounded-full border border-sky-200 text-slate-600 hover:bg-sky-50 transition flex items-center justify-center"
                     >
                       <FaTrash />
                     </button>

@@ -27,25 +27,25 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50 px-3 sm:px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-xl border border-sky-100 p-8">
+        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-xl border border-sky-100 p-6 sm:p-8">
           {!isSubmitted ? (
             <>
               {/* HEADER */}
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-extrabold text-slate-900">
+              <div className="text-center mb-6 sm:mb-8">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
                   Forgot Password
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Enter your email and we’ll send you a reset link
+                <p className="mt-2 text-xs sm:text-sm text-slate-600">
+                  Enter your email and <br />we’ll send you a reset link
                 </p>
               </div>
 
               {/* FORM */}
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-600 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                     Email Address
                   </label>
                   <input
@@ -54,13 +54,13 @@ const ForgotPassword = () => {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white"
+                    className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md"
+                  className="w-full py-2.5 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md text-sm sm:text-base"
                 >
                   Send Reset Link
                 </button>
@@ -68,7 +68,7 @@ const ForgotPassword = () => {
                 <div className="text-center">
                   <Link
                     to="/login"
-                    className="text-sm font-semibold text-sky-600 hover:underline"
+                    className="text-xs sm:text-sm font-semibold text-sky-600 hover:underline"
                   >
                     Back to Login
                   </Link>
@@ -78,23 +78,24 @@ const ForgotPassword = () => {
           ) : (
             /* SUCCESS STATE */
             <div className="text-center">
-              <div className="mx-auto w-20 h-20 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-4xl mb-6">
+              <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-3xl sm:text-4xl mb-5 sm:mb-6">
                 ✓
               </div>
 
-              <h2 className="text-3xl font-bold text-slate-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3 sm:mb-4">
                 Check Your Email
               </h2>
 
-              <p className="text-slate-600 mb-8">
+              <p className="text-xs sm:text-sm text-slate-600 mb-6 sm:mb-8">
                 We’ve sent a password reset link to{" "}
-                <strong>{email}</strong>.  
+                <strong>{email}</strong>.
+                <br />
                 Please check your inbox.
               </p>
 
               <Link
                 to="/login"
-                className="inline-block px-6 py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md"
+                className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md text-sm sm:text-base"
               >
                 Back to Login
               </Link>
