@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../utils/api";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Register = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,29 +18,32 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  /* ---------------- EMAIL REGISTER (UNCHANGED) ---------------- */
+  const handleEmailRegister = async (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.password) {
+    const { name, email, password, confirmPassword } = formData;
+
+    if (!name || !email || !password) {
       toast.error("Please fill in all fields");
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
 
     try {
       const response = await api.post("/auth/register", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
+        name,
+        email,
+        password,
       });
 
       if (response.data.success) {
@@ -49,6 +54,22 @@ const Register = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Registration failed");
+    }
+  };
+
+  /* ---------------- GOOGLE REGISTER (REAL) ---------------- */
+  const handleGoogleRegister = async (credentialResponse) => {
+    try {
+      const res = await api.post("/auth/google", {
+        tokenId: credentialResponse.credential,
+      });
+
+      if (res.data.success) {
+        toast.success("Account created successfully!");
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error("Google signup failed");
     }
   };
 
@@ -63,80 +84,67 @@ const Register = () => {
               Create Account
             </h2>
             <p className="mt-2 text-xs sm:text-sm text-slate-600">
-              Join{" "}
-              <span className="font-semibold text-sky-600">
-                MM Furniture
-              </span>{" "}
-              today
+              Join <span className="font-semibold text-sky-600">MM Furniture</span>
             </p>
           </div>
 
-          {/* FORM */}
-          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
-                Full Name
-              </label>
-              <input
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Your full name"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
-              />
-            </div>
+          {/* GOOGLE REGISTER */}
+          <div className="mb-5 w-full flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleRegister}
+              onError={() => toast.error("Google Signup Failed")}
+            />
+          </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
-                Email Address
-              </label>
-              <input
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
-              />
-            </div>
+          {/* DIVIDER */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-xs text-slate-500">OR</span>
+            <div className="flex-1 h-px bg-slate-200" />
+          </div>
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
-                Password
-              </label>
-              <input
-                name="password"
-                type="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Minimum 6 characters"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
-              />
-            </div>
+          {/* EMAIL FORM */}
+          <form onSubmit={handleEmailRegister} className="space-y-5">
+            <input
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
-                Confirm Password
-              </label>
-              <input
-                name="confirmPassword"
-                type="password"
-                required
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="Re-enter password"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
-              />
-            </div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
 
-            <button
-              type="submit"
-              className="w-full py-2.5 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md text-sm sm:text-base"
-            >
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+
+            <input
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+
+            <button className="w-full py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition">
               Create Account
             </button>
           </form>
@@ -151,6 +159,7 @@ const Register = () => {
               Sign in
             </Link>
           </p>
+
         </div>
       </div>
     </div>

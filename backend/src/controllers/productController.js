@@ -3,8 +3,10 @@ import { cloudinary } from '../config/cloudinary.js';
 import Cart from '../models/Cart.js';
 
 
+
+
 /* -------------------------------------------
-   GET ALL PRODUCTS
+   GET ALL PRODUCTS (WITH TAG LOGIC)
 -------------------------------------------- */
 export const getAllProducts = async (req, res) => {
   try {
@@ -12,7 +14,9 @@ export const getAllProducts = async (req, res) => {
 
     let query = { isActive: true };
 
-    if (category && category !== "All") query.category = category;
+    if (category && category !== "All") {
+      query.category = category;
+    }
 
     if (search) {
       query.$or = [
@@ -32,11 +36,32 @@ export const getAllProducts = async (req, res) => {
     else if (sort === "price-desc") sortOption.price = -1;
     else sortOption.createdAt = -1;
 
+    // 🔹 FETCH PRODUCTS
     const products = await Product.find(query).sort(sortOption);
 
-    return res.status(200).json({ success: true, count: products.length, products });
+    // 🔹 ADD "NEW (14 DAYS)" LOGIC
+    const updatedProducts = products.map((product) => {
+      const isNew =
+        product.tag === "new" &&
+        Date.now() - new Date(product.createdAt).getTime() <
+          14 * 24 * 60 * 60 * 1000;
+
+      return {
+        ...product._doc,
+        showNew: isNew,
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: updatedProducts.length,
+      products: updatedProducts,
+    });
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -105,6 +130,9 @@ export const createProduct = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
+
 
 /* -------------------------------------------
    UPDATE PRODUCT — KEEP OLD IMAGES + REMOVE SELECTED + ADD NEW
@@ -178,6 +206,8 @@ export const updateProduct = async (req, res) => {
     product.stock = updatedData.stock ?? product.stock;
     product.material = updatedData.material ?? product.material;
     product.color = updatedData.color ?? product.color;
+
+    product.tag = updatedData.tag ?? product.tag;
 
     if (updatedData.dimensions) {
       try {

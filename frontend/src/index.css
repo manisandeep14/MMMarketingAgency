@@ -108,3 +108,85 @@ body {
     @apply sm:shadow-md sm:hover:shadow-lg;
   }
 }
+
+
+/* 
+.mm-toast {
+  width: calc(100vw - 24px);      
+  max-width: 360px;
+  margin: 12px auto 0;
+  padding: 12px 14px;
+
+  border-radius: 14px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+
+  background: white;
+
+  color: black;
+  box-shadow:
+    0 12px 30px rgba(56, 189, 248, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(10px);
+  animation: toast-slide-down 0.3s ease-out;
+}
+
+/* Toast text */
+.mm-toast-body {
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tablet & above */
+@media (min-width: 640px) {
+  .mm-toast {
+    max-width: 420px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+  }
+
+  .mm-toast-body {
+    font-size: 0.95rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .mm-toast {
+    max-width: 460px;
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* NEW */
+.badge-new {
+  background: linear-gradient(135deg, #ff3b3b, #ff6b6b);
+}
+
+/* POPULAR */
+.badge-popular {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+}
+
+/* SPECIAL */
+.badge-special {
+  background: linear-gradient(135deg, #7c4dff, #9575ff);
+}

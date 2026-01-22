@@ -22,6 +22,7 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminInvites from './pages/admin/AdminInvites';
+import VerifyOTP from "./pages/VerifyOTP";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -45,6 +46,8 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} /> 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+
           <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />

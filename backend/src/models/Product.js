@@ -29,6 +29,15 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please select product category'],
       enum: ['Sofa', 'Bed', 'Chair', 'Table', 'Cabinet', 'Wardrobe', 'Decor', 'Other'],
+    },tag: {
+      type: String,
+      enum: ["new", "popular", "special", null],
+      default: "new",
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
 
     // Explicit images array with default empty array

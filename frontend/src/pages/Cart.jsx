@@ -10,6 +10,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cart, loading } = useSelector((state) => state.cart);
+  
 
   useEffect(() => {
     fetchCart();

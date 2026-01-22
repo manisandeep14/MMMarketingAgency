@@ -40,8 +40,11 @@ const AdminProducts = () => {
     length: "",
     width: "",
     height: "",
+    tag: "new",          // ✅ DEFAULT TAG
     isActive: true,
   });
+
+
 
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]); // local preview URLs
@@ -88,8 +91,10 @@ const AdminProducts = () => {
       length: "",
       width: "",
       height: "",
+      tag: "new",          // ✅ DEFAULT NEW
       isActive: true,
     });
+
 
     setImageFiles([]);
     clearPreviews();
@@ -113,8 +118,10 @@ const AdminProducts = () => {
       length: product.dimensions?.length || "",
       width: product.dimensions?.width || "",
       height: product.dimensions?.height || "",
+      tag: product.tag || "",     // ✅ LOAD EXISTING TAG
       isActive: product.isActive ?? true,
     });
+
 
     setExistingImages(normalizeImages(product.images));
     setImageFiles([]);
@@ -339,6 +346,25 @@ const AdminProducts = () => {
                 </select>
 
                 <input type="text" className="input-field" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} placeholder="Material" />
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">
+                    Product Tag
+                  </label>
+
+                  <select
+                    className="input-field"
+                    value={formData.tag}
+                    onChange={(e) =>
+                      setFormData({ ...formData, tag: e.target.value })
+                    }
+                  >
+                    <option value="new">New</option>
+                    <option value="popular">Popular</option>
+                    <option value="special">Special</option>
+                    <option value="">None</option>
+                  </select>
+                </div>
+
               </div>
 
               <input type="text" className="input-field" value={formData.color} onChange={(e) => setFormData({ ...formData, color: e.target.value })} placeholder="Color" />

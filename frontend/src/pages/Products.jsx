@@ -5,18 +5,15 @@ import { toast } from "react-toastify";
 import { setProducts, setLoading } from "../redux/slices/productSlice";
 import api from "../utils/api";
 
-// safe normalization for images
+/* ---------------- IMAGE NORMALIZER ---------------- */
 const normalizeImages = (images) => {
   if (!images || !Array.isArray(images)) return [];
 
   return images
     .filter(Boolean)
     .map((img) => {
-      if (typeof img === "string") return { public_id: null, url: img };
-      return {
-        public_id: img.public_id || img.publicId || null,
-        url: img.url || img.secure_url || null,
-      };
+      if (typeof img === "string") return { url: img };
+      return { url: img.url || img.secure_url };
     })
     .filter((i) => i.url);
 };
@@ -33,22 +30,33 @@ const categories = [
   "Other",
 ];
 
+const tagOptions = [
+  { label: "All", value: "" },
+  { label: "New", value: "new" },
+  { label: "Popular", value: "popular" },
+  { label: "Special", value: "special" },
+];
+
 const Products = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, loading } = useSelector((state) => state.products);
   const [showFilters, setShowFilters] = useState(false);
 
+  /* ---------------- FILTER STATE ---------------- */
   const [filters, setFilters] = useState({
     category: searchParams.get("category") || "All",
     search: searchParams.get("search") || "",
+    tag: searchParams.get("tag") || "",
     minPrice: "",
     maxPrice: "",
     sort: "newest",
   });
 
+  /* ---------------- FETCH PRODUCTS ---------------- */
   useEffect(() => {
-    fetchProducts();
+    const timer = setTimeout(fetchProducts, 400); // debounce search
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
@@ -59,225 +67,160 @@ const Products = () => {
 
       if (filters.category !== "All") params.append("category", filters.category);
       if (filters.search) params.append("search", filters.search);
+      if (filters.tag) params.append("tag", filters.tag);
       if (filters.minPrice) params.append("minPrice", filters.minPrice);
       if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
       if (filters.sort) params.append("sort", filters.sort);
 
-      const response = await api.get(`/products?${params.toString()}`);
-      dispatch(setProducts(response.data.products));
+      const res = await api.get(`/products?${params.toString()}`);
+      dispatch(setProducts(res.data.products || []));
     } catch (error) {
       toast.error("Failed to load products");
+    } finally {
       dispatch(setLoading(false));
     }
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilters({ ...filters, [key]: value });
-    if (key === "category" && value !== "All") {
-      setSearchParams({ category: value });
-    } else if (key === "category") {
-      setSearchParams({});
-    }
+  /* ---------------- FILTER HANDLER ---------------- */
+  const updateFilter = (key, value) => {
+    const updated = { ...filters, [key]: value };
+    setFilters(updated);
+
+    const params = {};
+    if (updated.category !== "All") params.category = updated.category;
+    if (updated.search) params.search = updated.search;
+    if (updated.tag) params.tag = updated.tag;
+
+    setSearchParams(params);
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
+      <div className="max-w-7xl mx-auto px-4 pt-8">
 
         {/* HEADER */}
-        <div className="flex items-center justify-between mb-5 sm:mb-6">
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900">
-            Our Products
-          </h1>
-
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-extrabold text-slate-900">Our Products</h1>
           <button
-            onClick={() => setShowFilters((prev) => !prev)}
-            className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-full border border-sky-200 text-sky-600 text-sm sm:text-base font-semibold hover:bg-sky-50 transition"
+            onClick={() => setShowFilters(!showFilters)}
+            className="px-4 py-2 rounded-full border border-sky-200 text-sky-600 font-semibold"
           >
             {showFilters ? "✕ Close Filters" : "☰ Filters"}
           </button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* FILTER SIDEBAR */}
+          {/* FILTER PANEL */}
           {showFilters && (
-            <aside className="lg:w-72 flex-shrink-0">
-              <div className="sticky top-20 sm:top-24 bg-white/90 backdrop-blur p-4 sm:p-6 rounded-2xl shadow-sm border border-sky-100">
-                <h2 className="text-lg sm:text-xl font-semibold mb-4">
-                  Filters
-                </h2>
+            <div className="lg:w-64 bg-white border border-sky-200 rounded-xl p-4 space-y-4">
+              
+              {/* SEARCH */}
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={filters.search}
+                onChange={(e) => updateFilter("search", e.target.value)}
+                className="input-field"
+              />
 
-                {/* Search */}
-                <div className="mb-4 sm:mb-5">
-                  <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-2">
-                    Search
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200"
-                    value={filters.search}
-                    onChange={(e) =>
-                      handleFilterChange("search", e.target.value)
-                    }
-                  />
-                </div>
+              {/* CATEGORY */}
+              <select
+                className="input-field"
+                value={filters.category}
+                onChange={(e) => updateFilter("category", e.target.value)}
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
 
-                {/* Category */}
-                <div className="mb-4 sm:mb-5">
-                  <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-2">
-                    Category
-                  </label>
-                  <select
-                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-slate-200"
-                    value={filters.category}
-                    onChange={(e) =>
-                      handleFilterChange("category", e.target.value)
-                    }
-                  >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              {/* TAG FILTER */}
+              <select
+                className="input-field"
+                value={filters.tag}
+                onChange={(e) => updateFilter("tag", e.target.value)}
+              >
+                {tagOptions.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
 
-                {/* Price */}
-                <div className="mb-4 sm:mb-5">
-                  <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-2">
-                    Price Range
-                  </label>
-                  <div className="flex gap-2 sm:gap-3">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      className="w-1/2 px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-slate-200"
-                      value={filters.minPrice}
-                      onChange={(e) =>
-                        handleFilterChange("minPrice", e.target.value)
-                      }
-                    />
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      className="w-1/2 px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-slate-200"
-                      value={filters.maxPrice}
-                      onChange={(e) =>
-                        handleFilterChange("maxPrice", e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-
-                {/* Sort */}
-                <div className="mb-4 sm:mb-5">
-                  <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-2">
-                    Sort By
-                  </label>
-                  <select
-                    className="w-full px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base rounded-lg border border-slate-200"
-                    value={filters.sort}
-                    onChange={(e) =>
-                      handleFilterChange("sort", e.target.value)
-                    }
-                  >
-                    <option value="newest">Newest</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                  </select>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex gap-3 mt-3">
-                  <button
-                    onClick={() => {
-                      fetchProducts();
-                      setShowFilters(false);
-                    }}
-                    className="flex-1 px-4 py-2.5 text-sm sm:text-base rounded-full bg-sky-500 text-white font-semibold"
-                  >
-                    Apply
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleFilterChange("category", "All");
-                      handleFilterChange("search", "");
-                      handleFilterChange("minPrice", "");
-                      handleFilterChange("maxPrice", "");
-                      handleFilterChange("sort", "newest");
-                    }}
-                    className="flex-1 px-4 py-2.5 text-sm sm:text-base rounded-full border"
-                  >
-                    Clear
-                  </button>
-                </div>
+              {/* PRICE */}
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="number"
+                  placeholder="Min ₹"
+                  className="input-field"
+                  value={filters.minPrice}
+                  onChange={(e) => updateFilter("minPrice", e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="Max ₹"
+                  className="input-field"
+                  value={filters.maxPrice}
+                  onChange={(e) => updateFilter("maxPrice", e.target.value)}
+                />
               </div>
-            </aside>
+            </div>
           )}
 
           {/* PRODUCTS GRID */}
           <div className="flex-1">
             {loading ? (
-              <div className="text-center py-16 sm:py-20">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 sm:h-14 sm:w-14 border-4 border-t-sky-500 border-slate-200"></div>
-                <p className="mt-4 text-sm sm:text-base text-slate-600">
-                  Loading products...
-                </p>
-              </div>
+              <div className="text-center py-20">Loading products...</div>
             ) : products.length === 0 ? (
-              <div className="text-center py-12 sm:py-16">
-                <p className="text-base sm:text-xl text-slate-600">
-                  No products found
-                </p>
+              <div className="text-center py-16 text-gray-500">
+                No products found
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => {
-                  const imgs = normalizeImages(product.images);
-                  const mainImg = imgs[0]?.url;
+                  const img = normalizeImages(product.images)[0]?.url;
 
                   return (
                     <Link
                       key={product._id}
                       to={`/products/${product._id}`}
-                      className="bg-gradient-to-br from-sky-50 to-white rounded-2xl border border-sky-200 shadow-md hover:shadow-xl transition transform hover:-translate-y-1 sm:hover:-translate-y-2 p-3 sm:p-4"
-                    >
-                      <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-200 border border-sky-100">
-                        {mainImg ? (
-                          <img
-                            src={mainImg}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
+                      className="bg-gradient-to-br from-sky-50 to-white rounded-2xl border border-sky-200 shadow-md 
+                      hover:shadow-xl transition transform 
+                      hover:-translate-y-1 sm:hover:-translate-y-2 
+                      p-3 sm:p-4">
+                      <div className="relative aspect-square mb-3 rounded-xl overflow-hidden">
+                        {img ? (
+                          <img src={img} alt={product.name} className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                          <div className="h-full flex items-center justify-center text-gray-400">
                             No Image
                           </div>
                         )}
 
-                        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm rounded-full shadow border border-sky-200">
-                          {product.category}
-                        </div>
+                        {product.showNew && (
+                          <span className="badge badge-new">NEW</span>
+                        )}
+                        {product.tag === "popular" && (
+                          <span className="badge badge-popular">POPULAR</span>
+                        )}
+                        {product.tag === "special" && (
+                          <span className="badge badge-special">SPECIAL</span>
+                        )}
                       </div>
 
-                      <div className="mt-3 sm:mt-4">
-                        <h3 className="font-semibold text-base sm:text-lg mb-1 line-clamp-1">
-                          {product.name}
-                        </h3>
-                        <p className="text-gray-600 text-xs sm:text-sm mb-2 line-clamp-2">
-                          {product.description}
-                        </p>
+                      <h3 className="font-semibold text-lg">{product.name}</h3>
+                      <p className="text-gray-500 text-sm line-clamp-2">
+                        {product.description}
+                      </p>
 
-                        <div className="flex items-center justify-between">
-                          <span className="text-sky-600 font-bold text-lg sm:text-xl">
-                            ₹{product.price.toLocaleString()}
-                          </span>
-                          <span className="text-xs sm:text-sm text-gray-500">
-                            {product.stock === 0 ? "Out of stock" : "In stock"}
-                          </span>
-                        </div>
+                      <div className="flex justify-between mt-2">
+                        <span className="text-sky-600 font-bold">
+                          ₹{product.price.toLocaleString()}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {product.stock > 0 ? "In stock" : "Out of stock"}
+                        </span>
                       </div>
                     </Link>
                   );

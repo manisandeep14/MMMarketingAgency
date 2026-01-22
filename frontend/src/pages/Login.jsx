@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { loginSuccess, setLoading } from "../redux/slices/authSlice";
 import api from "../utils/api";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  /* ---------------- EMAIL LOGIN (UNCHANGED) ---------------- */
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
@@ -28,7 +30,11 @@ const Login = () => {
 
     try {
       dispatch(setLoading(true));
-      const response = await api.post("/auth/login", formData);
+
+      const response = await api.post("/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
 
       if (response.data.success) {
         dispatch(
@@ -39,17 +45,43 @@ const Login = () => {
         );
 
         toast.success("Login successful!");
-
-        if (response.data.user.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
+        navigate(response.data.user.role === "admin" ? "/admin" : "/");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
       dispatch(setLoading(false));
     }
+  };
+
+  /* ---------------- GOOGLE LOGIN (REAL) ---------------- */
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      dispatch(setLoading(true));
+
+      const res = await api.post("/auth/google", {
+        tokenId: credentialResponse.credential,
+      });
+
+      if (res.data.success) {
+        dispatch(
+          loginSuccess({
+            user: res.data.user,
+            token: res.data.token,
+          })
+        );
+
+        toast.success("Logged in with Google 🚀");
+        navigate(res.data.user.role === "admin" ? "/admin" : "/");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Google login failed");
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google authentication failed");
   };
 
   return (
@@ -70,8 +102,23 @@ const Login = () => {
             </p>
           </div>
 
-          {/* FORM */}
-          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+          {/* GOOGLE LOGIN */}
+          <div className="mb-5 flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+            />
+          </div>
+
+          {/* DIVIDER */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-slate-200" />
+            <span className="text-xs text-slate-500">OR</span>
+            <div className="flex-1 h-px bg-slate-200" />
+          </div>
+
+          {/* EMAIL LOGIN FORM */}
+          <form onSubmit={handleEmailLogin} className="space-y-5 sm:space-y-6">
             <div>
               <label className="block text-xs sm:text-sm font-medium text-slate-600 mb-1">
                 Email Address
@@ -79,11 +126,10 @@ const Login = () => {
               <input
                 name="email"
                 type="email"
-                required
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-200 text-sm sm:text-base"
               />
             </div>
 
@@ -94,15 +140,14 @@ const Login = () => {
               <input
                 name="password"
                 type="password"
-                required
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-200 bg-white text-sm sm:text-base"
+                className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-200 text-sm sm:text-base"
               />
             </div>
 
-            <div className="flex items-center justify-between text-xs sm:text-sm">
+            <div className="flex justify-end text-xs sm:text-sm">
               <Link
                 to="/forgot-password"
                 className="text-sky-600 hover:underline font-medium"
@@ -113,7 +158,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-2.5 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md text-sm sm:text-base"
+              className="w-full py-2.5 sm:py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition shadow-md"
             >
               Sign In
             </button>
@@ -129,6 +174,7 @@ const Login = () => {
               Create one
             </Link>
           </p>
+
         </div>
       </div>
     </div>
