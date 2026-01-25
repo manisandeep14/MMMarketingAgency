@@ -1,7 +1,7 @@
 //vercerl files
 
 import express from "express";
-import { register, login, googleAuth } from "../src/routes/authRoutes.js";
+import { register, login, googleAuth } from "../../src/routes/authRoutes.js";
 
 const router = express.Router();
 
