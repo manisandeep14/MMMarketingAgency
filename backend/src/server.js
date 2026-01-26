@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+
 import connectDatabase from './config/database.js';
 import { configureCloudinary } from './config/cloudinary.js';
 
@@ -18,29 +19,36 @@ dotenv.config();
 
 const app = express();
 
+/* 🔹 REQUIRED FOR VERCEL + RATE LIMIT */
+app.set('trust proxy', 1);
+
+/* 🔹 CONNECT SERVICES */
 connectDatabase();
 configureCloudinary();
 
+/* 🔹 SECURITY & MIDDLEWARE */
 app.use(helmet());
-app.use(cors());
+
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/api/admin/invites', adminInviteRoutes);
 
+/* 🔹 RATE LIMITER */
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: 'Too many requests from this IP, please try again later.',
 });
-app.use('/api/', limiter);
+app.use('/api', limiter);
 
-app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'MM Furniture API is running',
-  });
-});
-
+/* 🔹 ROUTES */
+app.use('/api/admin/invites', adminInviteRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
@@ -48,6 +56,15 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
+/* 🔹 HEALTH CHECK */
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'MM Furniture API is running 🚀',
+  });
+});
+
+/* 🔹 GLOBAL ERROR HANDLER */
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -57,8 +74,13 @@ app.use((err, req, res, next) => {
   });
 });
 
+/* 🔹 LOCAL SERVER ONLY (NOT VERCEL) */
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;
