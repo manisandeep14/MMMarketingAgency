@@ -31,7 +31,7 @@ const Login = () => {
     try {
       dispatch(setLoading(true));
 
-      const response = await api.post("/auth/login", {
+      const response = await api.post("https://mm-marketing-agency.vercel.app/api/auth/login", {
         email: formData.email,
         password: formData.password,
       });
@@ -58,7 +58,7 @@ const Login = () => {
     try {
       dispatch(setLoading(true));
 
-      const res = await api.post("/auth/google", {
+      const res = await api.post("https://mm-marketing-agency.vercel.app/api/auth/google", {
         tokenId: credentialResponse.credential,
       });
 

@@ -40,7 +40,7 @@ const Register = () => {
     }
 
     try {
-      const response = await api.post("/auth/register", {
+      const response = await api.post("https://mm-marketing-agency.vercel.app/api/auth/register", {
         name,
         email,
         password,
@@ -60,7 +60,7 @@ const Register = () => {
   /* ---------------- GOOGLE REGISTER (REAL) ---------------- */
   const handleGoogleRegister = async (credentialResponse) => {
     try {
-      const res = await api.post("/auth/google", {
+      const res = await api.post("https://mm-marketing-agency.vercel.app/api/auth/google", {
         tokenId: credentialResponse.credential,
       });
 
