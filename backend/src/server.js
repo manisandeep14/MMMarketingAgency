@@ -31,18 +31,10 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5000",
-      "https://mm-marketing-agency-6rqw.vercel.app"
-    ],
+    origin: process.env.FRONTEND_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// IMPORTANT: handle preflight
-app.options("*", cors());
 
 
 
@@ -60,7 +52,7 @@ app.use('/api', limiter);
 /* 🔹 ROUTES */
 app.use('/api/admin/invites', adminInviteRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
+app.use('/api/products', productRoutes);  
 app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);

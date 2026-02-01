@@ -74,7 +74,7 @@ export const register = async (req, res) => {
 export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.params;
-    console.log("VERIFY TOKEN:", token);
+    console.log("VERIFY TOKEN:", req.params.token);
 
     const user = await User.findOne({ verificationToken: token });
     console.log("DB TOKEN:", user?.verificationToken);
