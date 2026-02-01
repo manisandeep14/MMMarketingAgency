@@ -31,10 +31,15 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: true,
+    origin: [
+      "http://localhost:5000",
+      "https://mm-marketing-agency-6rqw.vercel.app",
+      "https://mm-marketing-agency.vercel.app"
+    ],
     credentials: true,
   })
 );
+
 
 
 
