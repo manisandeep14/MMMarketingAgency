@@ -5,10 +5,7 @@ const API_URL =
 
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // ✅ CRITICAL for Google OAuth & auth
-  headers: {
-    "Content-Type": "application/json",
-  },
+  withCredentials: true,
 });
 
 /* =========================
