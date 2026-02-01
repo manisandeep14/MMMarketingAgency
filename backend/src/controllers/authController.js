@@ -73,12 +73,17 @@ export const register = async (req, res) => {
 ========================= */
 export const verifyEmail = async (req, res) => {
   try {
-    const user = await User.findOne({ verificationToken: req.params.token });
+    const { token } = req.params;
+    console.log("VERIFY TOKEN:", token);
+
+    const user = await User.findOne({ verificationToken: token });
+    console.log("DB TOKEN:", user?.verificationToken);
+
 
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "Invalid token",
+        message: "Invalid or expired verification link",
       });
     }
 
@@ -91,7 +96,11 @@ export const verifyEmail = async (req, res) => {
       message: "Email verified successfully",
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Email verification failed",
+    });
   }
 };
 

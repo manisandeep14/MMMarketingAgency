@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await api.get(`/auth/verify-email/${token}`);
+        const response = await api.get(`/api/auth/verify-email/${token}`);
         if (response.data.success) {
           setStatus("success");
           toast.success("Email verified successfully!");
@@ -21,10 +21,14 @@ const VerifyEmail = () => {
       }
     };
 
+
+
     if (token) {
       verifyEmail();
     }
   }, [token]);
+ 
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-50 via-white to-sky-50 px-3 sm:px-4">
