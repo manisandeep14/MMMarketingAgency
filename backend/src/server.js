@@ -34,7 +34,6 @@ app.use(
     origin: [
       "http://localhost:5000",
       "https://mm-marketing-agency-6rqw.vercel.app",
-      "https://mm-marketing-agency.vercel.app"
     ],
     credentials: true,
   })
