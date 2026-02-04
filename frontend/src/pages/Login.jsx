@@ -58,7 +58,7 @@ const Login = () => {
     try {
       dispatch(setLoading(true));
 
-      const res = await api.post("https://mm-marketing-agency.vercel.app/api/auth/google", {
+      const res = await api.post("https://mmmarketingagency.onrender.com/api/auth/google", {
         tokenId: credentialResponse.credential,
       });
 

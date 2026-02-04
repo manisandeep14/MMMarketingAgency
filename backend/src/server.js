@@ -34,6 +34,7 @@ app.use(
     origin: [
       "http://localhost:5000",
       "https://mm-marketing-agency-6rqw.vercel.app",
+      "https://mmmarketingagency.onrender.com",
     ],
     credentials: true,
   })

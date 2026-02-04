@@ -40,7 +40,7 @@ const Register = () => {
     }
 
     try {
-      const response = await api.post("https://mm-marketing-agency.vercel.app/api/auth/register", {
+      const response = await api.post("https://mmmarketingagency.onrender.com/api/auth/register", {
         name,
         email,
         password,
