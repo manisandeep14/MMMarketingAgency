@@ -20,7 +20,7 @@ const VerifyEmail = () => {
         toast.error(error.response?.data?.message || "Verification failed");
       }
     };
-
+    console.log("FRONTEND TOKEN:", token);
     if (token) {
       verifyEmail();
     }

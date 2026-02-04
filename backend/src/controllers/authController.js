@@ -45,7 +45,7 @@ export const register = async (req, res) => {
       provider: "local",
     });
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    const verificationUrl = `https://mmmarketingagency.onrender.com/api/auth/verify-email/${verificationToken}`;
     const emailHtml = getVerificationEmailTemplate(name, verificationUrl);
 
     await sendEmail({
@@ -74,35 +74,29 @@ export const register = async (req, res) => {
 export const verifyEmail = async (req, res) => {
   try {
     const { token } = req.params;
-    console.log("VERIFY TOKEN:", req.params.token);
 
     const user = await User.findOne({ verificationToken: token });
-    console.log("DB TOKEN:", user?.verificationToken);
-
 
     if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid or expired verification link",
-      });
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?verified=false`
+      );
     }
 
     user.isVerified = true;
     user.verificationToken = undefined;
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
-    });
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/login?verified=true`
+    );
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Email verification failed",
-    });
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/login?verified=false`
+    );
   }
 };
+
 
 /* =========================
    LOGIN (EMAIL)
