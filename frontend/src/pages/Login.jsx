@@ -13,12 +13,8 @@ const Login = () => {
   const [params] = useSearchParams();
 
   useEffect(() => {
-    if (params.get("verified") === "true") {
-      toast.success("Email verified successfully. Please login.");
-    }
-    if (params.get("verified") === "false") {
-      toast.error("Invalid or expired verification link.");
-    }
+    window.location.href =
+      `https://mmmarketingagency.onrender.com/api/auth/verify-email/${token}`;
   }, []);
 
   const [formData, setFormData] = useState({

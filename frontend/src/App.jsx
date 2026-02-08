@@ -12,7 +12,6 @@ import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
-// import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import AdminInviteAccept from './pages/AdminInviteAccept';
 import ResetPassword from './pages/ResetPassword';
