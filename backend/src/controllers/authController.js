@@ -46,6 +46,7 @@ export const register = async (req, res) => {
     });
 
     const verificationUrl = `https://mmmarketingagency.onrender.com/api/auth/verify-email/${verificationToken}`;
+    
     const emailHtml = getVerificationEmailTemplate(name, verificationUrl);
 
     // ✅ CONTROLLED EMAIL SEND
