@@ -2,7 +2,7 @@
   import crypto from 'crypto';
   import AdminInvite from '../models/AdminInvite.js';
   import User from '../models/User.js';
-  import { sendEmail } from '../config/nodemailer.js';
+  import { sendEmail } from "../config/brevo.js";
   import dotenv from 'dotenv';
   dotenv.config();
 

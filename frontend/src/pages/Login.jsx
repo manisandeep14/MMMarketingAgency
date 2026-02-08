@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
 import { loginSuccess, setLoading } from "../redux/slices/authSlice";
 import api from "../utils/api";
 import { GoogleLogin } from "@react-oauth/google";
@@ -9,6 +10,16 @@ import { GoogleLogin } from "@react-oauth/google";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [params] = useSearchParams();
+
+  useEffect(() => {
+    if (params.get("verified") === "true") {
+      toast.success("Email verified successfully. Please login.");
+    }
+    if (params.get("verified") === "false") {
+      toast.error("Invalid or expired verification link.");
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",

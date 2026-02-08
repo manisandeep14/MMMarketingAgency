@@ -12,7 +12,7 @@ import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import VerifyEmail from './pages/VerifyEmail';
+// import VerifyEmail from './pages/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword';
 import AdminInviteAccept from './pages/AdminInviteAccept';
 import ResetPassword from './pages/ResetPassword';
@@ -48,7 +48,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
 
-          <Route path="/verify-email/:token" element={<VerifyEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/admin-invite/:token" element={<AdminInviteAccept />} />

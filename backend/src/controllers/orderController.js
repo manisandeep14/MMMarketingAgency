@@ -3,7 +3,7 @@ import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-import { sendEmail } from '../config/nodemailer.js';
+import { sendEmail } from "../config/brevo.js";
 import { getOrderConfirmationEmailTemplate } from '../utils/emailTemplates.js';
 
 const getRazorpayInstance = () => {

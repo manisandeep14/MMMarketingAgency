@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import { generateToken, generateVerificationToken } from "../utils/jwt.js";
-import { sendEmail } from "../config/nodemailer.js";
+import { sendEmail } from "../config/brevo.js";
 import {
   getVerificationEmailTemplate,
   getPasswordResetEmailTemplate,
@@ -48,11 +48,20 @@ export const register = async (req, res) => {
     const verificationUrl = `https://mmmarketingagency.onrender.com/api/auth/verify-email/${verificationToken}`;
     const emailHtml = getVerificationEmailTemplate(name, verificationUrl);
 
-    await sendEmail({
-      to: email,
-      subject: "Verify Your Email - MM Furniture",
-      html: emailHtml,
-    });
+    // ✅ CONTROLLED EMAIL SEND
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Verify your email",
+        html: emailHtml,
+      });
+    } catch (err) {
+      console.error("Email failed:", err.message);
+      return res.status(500).json({
+        success: false,
+        message: "Registration failed. Email could not be sent.",
+      });
+    }
 
     res.status(201).json({
       success: true,
@@ -72,31 +81,23 @@ export const register = async (req, res) => {
    VERIFY EMAIL
 ========================= */
 export const verifyEmail = async (req, res) => {
-  try {
-    const { token } = req.params;
+  const { token } = req.params;
 
-    const user = await User.findOne({ verificationToken: token });
-
-    if (!user) {
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/login?verified=false`
-      );
-    }
-
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
-
-    return res.redirect(
-      `${process.env.FRONTEND_URL}/login?verified=true`
-    );
-  } catch (error) {
+  const user = await User.findOne({ verificationToken: token });
+  if (!user) {
     return res.redirect(
       `${process.env.FRONTEND_URL}/login?verified=false`
     );
   }
-};
 
+  user.isVerified = true;
+  user.verificationToken = undefined;
+  await user.save();
+
+  return res.redirect(
+    `${process.env.FRONTEND_URL}/login?verified=true`
+  );
+};
 
 /* =========================
    LOGIN (EMAIL)
@@ -224,10 +225,12 @@ export const forgotPassword = async (req, res) => {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const emailHtml = getPasswordResetEmailTemplate(user.name, resetUrl);
 
-    await sendEmail({
-      to: user.email,
-      subject: "Password Reset - MM Furniture",
+    sendEmail({
+      to: user.email, // ✅ FIXED
+      subject: "Reset your password",
       html: emailHtml,
+    }).catch(err => {
+      console.error("Email failed:", err.message);
     });
 
     res.status(200).json({
