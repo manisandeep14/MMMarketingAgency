@@ -22,6 +22,10 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminInvites from './pages/admin/AdminInvites';
 import VerifyOTP from "./pages/VerifyOTP";
+import { useEffect, useState } from "react";
+import ServerLoader from "./components/ServerLoader";
+import axios from "axios";
+
 
 
 const ProtectedRoute = ({ children }) => {
@@ -34,7 +38,27 @@ const AdminRoute = ({ children }) => {
   return isAuthenticated && user?.role === 'admin' ? children : <Navigate to="/" />;
 };
 
+
+
+
 function App() {
+  const [serverReady, setServerReady] = useState(false);
+  
+  useEffect(() => {
+    const wakeServer = async () => {
+      try {
+        await axios.get("https://mmmarketingagency.onrender.com/");
+        setServerReady(true);
+      } catch (error) {
+        setTimeout(wakeServer, 3000); // retry every 3 sec
+      }
+    };
+  
+    wakeServer();
+  }, []);
+  if (!serverReady) {
+  return <ServerLoader />;
+}
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
