@@ -130,6 +130,22 @@ const Checkout = () => {
         order_id: razorpayResponse.data.order.id,
         handler: async (response) => {
           try {
+            const total = calculateTotal();
+
+            // ✅ Step 1: Verify payment signature
+            const verifyRes = await api.post("/orders/razorpay/verify", {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            if (!verifyRes.data.isValid) {
+              toast.error("Payment verification failed");
+              setProcessing(false);
+              return;
+            }
+
+            // ✅ Step 2: Create order only after verification
             const orderData = {
               shippingAddress: selectedAddress,
               paymentInfo: {
@@ -149,8 +165,11 @@ const Checkout = () => {
               toast.success("Order placed successfully!");
               navigate(`/orders/${orderResponse.data.order._id}`);
             }
+
           } catch (error) {
-            toast.error("Order placement failed");
+            console.log("Order Error:", error.response?.data);
+            toast.error(error.response?.data?.message || "Order placement failed");
+          } finally {
             setProcessing(false);
           }
         },
@@ -164,7 +183,7 @@ const Checkout = () => {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-      setProcessing(false);
+      // setProcessing(false);
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Payment initialization failed"

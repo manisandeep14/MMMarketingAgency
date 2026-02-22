@@ -109,10 +109,12 @@ export const createOrder = async (req, res) => {
 
     const user = req.user;
     const emailHtml = getOrderConfirmationEmailTemplate(user.name, order._id, totalPrice);
-    await sendEmail({
+    sendEmail({
       to: user.email,
       subject: 'Order Confirmation - MM Furniture',
       html: emailHtml,
+    }).catch((err) => {
+      console.error("Order confirmation email failed:", err.message);
     });
 
     res.status(201).json({
