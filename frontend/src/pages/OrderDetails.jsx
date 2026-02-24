@@ -65,12 +65,15 @@ const OrderDetails = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
 
         {/* BACK LINK */}
-        <Link
-          to="/orders"
-          className="inline-block mb-4 text-sky-600 hover:underline text-sm sm:text-base"
-        >
-          ← Back to Orders
-        </Link>
+        <div className="mb-4 sm:mb-6">
+          <Link
+            to="/orders"
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm sm:text-base rounded-lg bg-white border border-sky-100 shadow-sm hover:shadow-md transition"
+          >
+            {/* <FaArrowLeft /> */}
+            ← Back to Orders
+          </Link>
+        </div>
 
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 sm:mb-8">

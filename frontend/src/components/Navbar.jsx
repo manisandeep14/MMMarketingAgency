@@ -144,6 +144,14 @@ const Navbar = () => {
                         Profile
                       </Link>
 
+                      <Link
+                        to="/orders"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-4 py-2 text-sm text-slate-700 hover:bg-sky-50 transition"
+                      >
+                        My Orders
+                      </Link>
+
                       {user?.role === 'admin' && (
                         <Link
                           to="/admin"
