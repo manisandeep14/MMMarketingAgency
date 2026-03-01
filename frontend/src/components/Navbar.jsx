@@ -75,6 +75,9 @@ const Navbar = () => {
             <Link className="font-medium text-slate-700 hover:text-sky-600 transition" to="/products">
               Products
             </Link>
+            <Link className="font-medium text-slate-700 hover:text-sky-600 transition" to="/Workshop">
+              Workshop
+            </Link>
           </div>
 
           {/* RIGHT SECTION */}
