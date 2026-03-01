@@ -12,6 +12,7 @@
     "@react-oauth/google": "^0.13.4",
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.6.2",
+    "framer-motion": "^12.34.3",
     "google-auth-library": "^10.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
