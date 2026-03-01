@@ -52,31 +52,45 @@ const Workshop = () => {
     <div className="bg-gradient-to-b from-sky-50 via-white to-sky-50">
 
       {/* ================= HERO SECTION ================= */}
-      <div
-        className="relative h-[90vh] flex items-center justify-center text-center"
-        style={{
-          backgroundImage: `url(${images[current]})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+      <div className="relative h-[90vh] overflow-hidden">
+
+        {/* Image Slider Container */}
+        <div
+          className="flex h-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {images.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt="Workshop"
+              className="w-full h-full object-cover flex-shrink-0"
+            />
+          ))}
+        </div>
+
+        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-sky-900/40 backdrop-blur-sm"></div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative z-10 text-white px-6"
-        >
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-wide">
-            WORKSHOP
-          </h1>
-          <p className="mt-4 text-lg sm:text-xl max-w-2xl mx-auto">
-            Our Designs. Your Vision. Custom Crafted Furniture.
-          </p>
-        </motion.div>
-      </div>
+        {/* Text */}
+        <div className="absolute inset-0 flex items-center justify-center text-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-white px-6"
+          >
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-wide">
+              WORKSHOP
+            </h1>
+            <p className="mt-4 text-lg sm:text-xl max-w-2xl mx-auto">
+              Our Designs. Your Vision. Custom Crafted Furniture.
+            </p>
+          </motion.div>
+        </div>
 
+      </div>
+      
       {/* ================= IMAGE + FORM SECTION ================= */}
       <div className="max-w-6xl mx-auto px-6 py-20">
 

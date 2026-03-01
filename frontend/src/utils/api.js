@@ -28,11 +28,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+
+    // Only auto logout if user was already logged in
+    const token = localStorage.getItem("token");
+
+    if (status === 401 && token) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+
+      // Optional: use window.location only for protected route failures
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );
