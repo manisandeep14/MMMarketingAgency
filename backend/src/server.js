@@ -75,7 +75,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
-app.use("/api", workshopRoutes);
+app.use("/api/workshop-request", workshopRoutes);
 
 /* 🔹 HEALTH CHECK */
 app.get('/', (req, res) => {
