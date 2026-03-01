@@ -13,22 +13,37 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const response = await api.get('/orders/my-orders');
+      const response = await api.get("/orders/my-orders");
+
       setOrders(response.data.orders);
-      setLoading(false);
 
       // 🔔 Notifications for Delivered / Cancelled
-      response.data.orders.forEach((order) => {
-        if (order.orderStatus === 'Delivered') {
-          toast.success('🎉 Your order has been delivered successfully!');
-        }
+      const notifiedOrders =
+        JSON.parse(localStorage.getItem("notifiedOrders")) || [];
 
-        if (order.orderStatus === 'Cancelled') {
-          toast.error('⚠️ Your order has been cancelled.');
+      response.data.orders.forEach((order) => {
+        if (
+          (order.orderStatus === "Delivered" ||
+            order.orderStatus === "Cancelled") &&
+          !notifiedOrders.includes(order._id)
+        ) {
+          if (order.orderStatus === "Delivered") {
+            toast.success("🎉 Your order has been delivered successfully!");
+          }
+
+          if (order.orderStatus === "Cancelled") {
+            toast.error("⚠️ Your order has been cancelled.");
+          }
+
+          notifiedOrders.push(order._id);
         }
       });
+
+      localStorage.setItem("notifiedOrders", JSON.stringify(notifiedOrders));
+
     } catch (error) {
-      toast.error('Failed to load orders');
+      toast.error("Failed to load orders");
+    } finally {
       setLoading(false);
     }
   };

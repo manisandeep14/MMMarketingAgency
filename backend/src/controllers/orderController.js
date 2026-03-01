@@ -215,40 +215,49 @@ export const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).populate("user");
 
     if (!order) {
-      return res.status(404).json({ success: false, message: 'Order not found' });
+      return res.status(404).json({ success: false, message: "Order not found" });
     }
 
     order.orderStatus = status;
 
-    if (status === 'Delivered') {
+    if (status === "Delivered") {
       order.deliveredAt = Date.now();
     }
 
     await order.save();
 
-    if (
-      order.orderStatus === "Delivered" ||
-      order.orderStatus === "Cancelled"
-    ) {
-      // Save notification
-      await Notification.create({
-        user: order.user,
-        message:
-          order.orderStatus === "Delivered"
-            ? "Your order has been delivered successfully."
-            : "Your order has been cancelled.",
-      });
+    // 📧 Send Email Only (Safe)
+    if (status === "Delivered" || status === "Cancelled") {
+      try {
+        await sendEmail({
+          to: order.user.email,
+          subject:
+            status === "Delivered"
+              ? "Your Order Has Been Delivered 🎉"
+              : "Your Order Has Been Cancelled ⚠️",
+          html: `
+            <h2>Order Update</h2>
+            <p>Hello ${order.user.name},</p>
+            <p>Your order <strong>${order._id}</strong> has been <strong>${status}</strong>.</p>
+            <p>Thank you for shopping with MM Furniture.</p>
+          `,
+        });
+      } catch (emailError) {
+        console.error("Email failed:", emailError.message);
+      }
     }
 
     res.status(200).json({
       success: true,
-      message: 'Order status updated',
+      message: "Order status updated successfully",
       order,
     });
+
   } catch (error) {
+    console.error("Update Status Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
