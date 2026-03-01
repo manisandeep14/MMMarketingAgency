@@ -135,6 +135,13 @@ const Navbar = () => {
                         >
                           Products
                         </Link>
+                        <Link
+                          to="/workshop"
+                          onClick={() => setMenuOpen(false)}
+                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-sky-50 transition"
+                        >
+                          Work Shop
+                        </Link>
                         <div className="my-1 border-t border-sky-100" />
                       </div>
 
