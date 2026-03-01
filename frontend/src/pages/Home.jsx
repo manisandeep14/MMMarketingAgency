@@ -1,9 +1,9 @@
-// frontend/src/pages/Home.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-// Swiper (carousel)
+// Swiper
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -13,6 +13,22 @@ import "swiper/css/autoplay";
 export default function Home() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
+  /* ================= HERO SLIDER ================= */
+  const heroImages = [
+    "/categories/hero.jpg",
+    "/categories/sofa.jpg",
+    "/categories/bed.png",
+  ];
+
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleBuyNow = () => {
     if (!isAuthenticated) return navigate("/login");
@@ -34,50 +50,70 @@ export default function Home() {
     <div className="w-full bg-gradient-to-b from-sky-50 via-white to-sky-50">
 
       {/* ================================================= */}
-      {/* HERO SECTION */}
+      {/* HERO SECTION (SMOOTH SLIDER) */}
       {/* ================================================= */}
-      <section className="relative">
+      <section className="relative h-[80vh] overflow-hidden">
+
         <div
-          className="h-[55vh] sm:h-[65vh] md:h-[80vh] bg-cover bg-center"
-          style={{ backgroundImage: "url('./categories/hero.jpg')" }}
+          className="flex h-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
+          {heroImages.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt="hero"
+              className="w-full h-full object-cover flex-shrink-0"
+            />
+          ))}
+        </div>
 
-          <div className="relative z-10 flex items-center justify-center h-full">
-            <div className="text-center px-4 sm:px-6 max-w-4xl">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold text-slate-900 leading-tight">
-                Make Your Room <br /> Comfortable & Elegant
-              </h1>
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
 
-              <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-xl text-slate-700 max-w-2xl mx-auto">
-                Discover thoughtfully designed furniture, crafted for comfort and style.
-              </p>
+        <div className="absolute inset-0 flex items-center justify-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="px-6"
+          >
+            <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-900 leading-tight">
+              Make Your Room <br /> Comfortable & Elegant
+            </h1>
 
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                <button
-                  onClick={handleBuyNow}
-                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-sky-500 hover:bg-sky-600 text-white text-sm sm:text-base font-semibold shadow-lg transition"
-                >
-                  Buy Now
-                </button>
+            <p className="mt-4 text-lg text-slate-700 max-w-2xl mx-auto">
+              Discover thoughtfully designed furniture, crafted for comfort and style.
+            </p>
 
-                <button
-                  onClick={handleExplore}
-                  className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white border border-slate-300 text-slate-700 text-sm sm:text-base shadow-sm transition"
-                >
-                  Explore
-                </button>
-              </div>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={handleBuyNow}
+                className="px-6 py-3 rounded-full bg-sky-500 hover:bg-sky-600 text-white font-semibold shadow-lg transition transform hover:scale-105"
+              >
+                Buy Now
+              </button>
+
+              <button
+                onClick={handleExplore}
+                className="px-6 py-3 rounded-full bg-white border border-slate-300 text-slate-700 shadow-sm transition transform hover:scale-105"
+              >
+                Explore
+              </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ================================================= */}
       {/* SHOP BY ROOM */}
       {/* ================================================= */}
-      <section className="max-w-6xl mx-auto px-4 py-10 sm:py-16">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-10">
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-6xl mx-auto px-4 py-16"
+      >
+        <h2 className="text-3xl font-bold text-center mb-10">
           Shop By Room
         </h2>
 
@@ -97,100 +133,65 @@ export default function Home() {
             <SwiperSlide key={i}>
               <div
                 onClick={() => navigate(`/products?category=${c.id}`)}
-                className="bg-white rounded-xl border border-sky-100 p-4 sm:p-6 shadow hover:shadow-2xl transition transform hover:-translate-y-2 cursor-pointer overflow-hidden"
+                className="bg-white rounded-xl border border-sky-100 shadow hover:shadow-2xl transition transform hover:-translate-y-3 cursor-pointer overflow-hidden"
               >
                 <div
-                  className="h-40 sm:h-48 bg-center bg-cover"
+                  className="h-48 bg-center bg-cover"
                   style={{ backgroundImage: `url(${c.img})` }}
                 ></div>
-                <div className="p-3 sm:p-4 text-center">
-                  <p className="font-semibold text-sm sm:text-base">{c.title}</p>
+                <div className="p-4 text-center font-semibold">
+                  {c.title}
                 </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </section>
+      </motion.section>
 
       {/* ================================================= */}
       {/* WHO WE ARE */}
       {/* ================================================= */}
-      <section className="max-w-6xl mx-auto px-4 py-12 sm:py-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center bg-sky-50/50 border border-sky-100 rounded-2xl shadow-sm">
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-12 items-center bg-sky-50/50 border border-sky-100 rounded-2xl shadow-sm"
+      >
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
+          <h2 className="text-3xl font-bold mb-4">
             Who We Are
           </h2>
 
-          <p className="text-slate-600 text-sm sm:text-base mb-5 sm:mb-6 leading-relaxed">
+          <p className="text-slate-600 mb-6 leading-relaxed">
             MM Furniture blends craft and comfort — we design furniture to make rooms feel lived-in.
-            Every piece is tested for durability and style. From curated sofas to multifunctional storage,
-            we bring modern designs with a timeless touch.
+            Every piece is tested for durability and style.
           </p>
 
           <button
             onClick={() => navigate("/products")}
-            className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-sky-500 text-white text-sm sm:text-base font-semibold shadow hover:bg-sky-600"
+            className="px-6 py-3 rounded-full bg-sky-500 text-white font-semibold shadow hover:bg-sky-600 transition transform hover:scale-105"
           >
             Shop Now
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {[
-            { title: "Free Delivery", sub: "Across city" },
-            { title: "Secure Payment", sub: "Multiple options" },
-            { title: "Free Installation", sub: "When required" },
-            { title: "Warranty", sub: "1 year guarantee" },
+            "Free Delivery",
+            "Secure Payment",
+            "Free Installation",
+            "Warranty",
           ].map((f, i) => (
             <div
               key={i}
-              className="bg-white/80 border border-sky-100 p-4 sm:p-6 rounded-xl shadow hover:shadow-2xl transition"
+              className="bg-white border border-sky-100 p-6 rounded-xl shadow hover:shadow-2xl transition transform hover:-translate-y-2"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-sky-100 rounded-md flex items-center justify-center text-sky-600 text-lg sm:text-xl mb-3">
-                ✓
-              </div>
-              <h4 className="font-semibold text-sm sm:text-base">{f.title}</h4>
-              <p className="text-slate-500 text-xs sm:text-sm">{f.sub}</p>
+              <div className="text-sky-600 text-xl mb-2">✓</div>
+              <div className="font-semibold">{f}</div>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* ================================================= */}
-      {/* WHY CHOOSE US */}
-      {/* ================================================= */}
-      <section className="bg-slate-50 py-12 sm:py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">
-            Why Choose Us
-          </h2>
-
-          <p className="text-slate-600 text-sm sm:text-base mb-8 sm:mb-10">
-            We combine comfort, quality, and service — making it easy to choose furniture that lasts.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { label: "Years Experience", value: "7" },
-              { label: "Branches", value: "2" },
-              { label: "Furniture Sold", value: "10k+" },
-              { label: "Variants", value: "260+" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                className="bg-gradient-to-tr from-sky-50 to-sky-100 p-4 sm:p-6 rounded-xl shadow hover:shadow-2xl transition"
-              >
-                <div className="text-2xl sm:text-3xl font-bold text-sky-600">
-                  {s.value}
-                </div>
-                <div className="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </motion.section>
 
     </div>
   );
