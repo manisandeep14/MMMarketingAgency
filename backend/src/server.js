@@ -15,6 +15,9 @@ import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import adminInviteRoutes from './routes/adminInviteRoutes.js';
 
+import workshopRoutes from "./routes/workshopRoutes.js";
+
+
 dotenv.config();
 
 const app = express();
@@ -72,6 +75,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use("/api", workshopRoutes);
 
 /* 🔹 HEALTH CHECK */
 app.get('/', (req, res) => {
