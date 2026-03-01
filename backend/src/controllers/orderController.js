@@ -5,6 +5,7 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { sendEmail } from "../config/brevo.js";
 import { getOrderConfirmationEmailTemplate } from '../utils/emailTemplates.js';
+import User from "../models/User.js";
 
 const getRazorpayInstance = () => {
   if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
@@ -116,6 +117,33 @@ export const createOrder = async (req, res) => {
     }).catch((err) => {
       console.error("Order confirmation email failed:", err.message);
     });
+
+    // ✅ ALSO Notify Admins
+    const admins = await User.find({ role: "admin" });
+
+    if (admins.length > 0) {
+      const adminHtml = `
+        <h2>New Order Received</h2>
+        <p><strong>Order ID:</strong> ${order._id}</p>
+        <p><strong>Customer:</strong> ${user.name}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Total Amount:</strong> ₹${totalPrice}</p>
+        <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+      `;
+
+      for (const admin of admins) {
+        if (admin.email) {
+          sendEmail({
+            to: admin.email,
+            subject: "🚨 New Order Placed - MM Furniture",
+            html: adminHtml,
+          }).catch((err) => {
+            console.error("Admin email failed:", err.message);
+          });
+        }
+      }
+    }
+
 
     res.status(201).json({
       success: true,

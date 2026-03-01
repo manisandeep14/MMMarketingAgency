@@ -45,6 +45,36 @@ const AdminProducts = () => {
   });
 
 
+  const [dragActive, setDragActive] = useState(false);
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    const files = Array.from(e.dataTransfer.files || []);
+    if (!files.length) return;
+
+    const previews = files.map((f) => URL.createObjectURL(f));
+
+    // ✅ ADD instead of replace
+    setImageFiles((prev) => [...prev, ...files]);
+    setImagePreviews((prev) => [...prev, ...previews]);
+  };
+
+
+
 
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]); // local preview URLs
@@ -376,7 +406,20 @@ const AdminProducts = () => {
               </div>
 
               {/* FILE UPLOAD */}
-              <input type="file" multiple accept="image/*" className="input-field" onChange={handleFileChange} />
+              {/* <input type="file" multiple accept="image/*" className="input-field" onChange={handleFileChange} /> */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  className={`input-field ${dragActive ? "border-sky-400 bg-sky-50" : ""}`}
+                  onChange={handleFileChange}
+                />
+              </div>
 
               {/* NEW PREVIEWS */}
               {imagePreviews.length > 0 && (

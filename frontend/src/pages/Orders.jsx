@@ -22,6 +22,18 @@ const Orders = () => {
     }
   };
 
+    const getStatusMessage = (status) => {
+      const messages = {
+        Pending: "🕒 Your order has been received and is waiting for confirmation.",
+        Processing: "⚙️ Great news! We are preparing your items carefully.",
+        Shipped: "🚚 Your order is on the way. Get ready!",
+        Delivered: "🎉 Delivered successfully! We hope you love it.",
+        Cancelled: "❌ This order has been cancelled. If you need help, contact support.",
+      };
+
+      return messages[status] || "Your order is being processed.";
+    };
+
   const getStatusColor = (status) => {
     const colors = {
       Pending: 'bg-yellow-100 text-yellow-800',
@@ -94,13 +106,19 @@ const Orders = () => {
                     <p className="text-xl sm:text-2xl font-bold text-sky-600">
                       ₹{order.totalPrice.toLocaleString()}
                     </p>
-                    <span
-                      className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                        order.orderStatus
-                      )}`}
-                    >
-                      {order.orderStatus}
-                    </span>
+                    <div className="mt-2 space-y-2">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                          order.orderStatus
+                        )}`}
+                      >
+                        {order.orderStatus}
+                      </span>
+
+                      <p className="text-xs sm:text-sm text-slate-600 bg-sky-50 border border-sky-100 rounded-lg px-3 py-2">
+                        {getStatusMessage(order.orderStatus)}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
