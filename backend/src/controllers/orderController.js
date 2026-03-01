@@ -229,6 +229,20 @@ export const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
+    if (
+      order.orderStatus === "Delivered" ||
+      order.orderStatus === "Cancelled"
+    ) {
+      // Save notification
+      await Notification.create({
+        user: order.user,
+        message:
+          order.orderStatus === "Delivered"
+            ? "Your order has been delivered successfully."
+            : "Your order has been cancelled.",
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Order status updated',
