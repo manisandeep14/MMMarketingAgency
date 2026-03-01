@@ -24,6 +24,7 @@ import AdminInvites from './pages/admin/AdminInvites';
 import VerifyOTP from "./pages/VerifyOTP";
 import { useEffect, useState } from "react";
 import ServerLoader from "./components/ServerLoader";
+import Workshop from './pages/WorkShop';
 import axios from "axios";
 
 
@@ -81,6 +82,7 @@ function App() {
           <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
           <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/workshop" element={<Workshop />} />
           
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
