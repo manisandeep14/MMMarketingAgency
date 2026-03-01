@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// frontend/src/pages/Home.jsx
+import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -13,22 +14,6 @@ import "swiper/css/autoplay";
 export default function Home() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  /* ================= HERO SLIDER ================= */
-  const heroImages = [
-    "/categories/hero.jpg",
-    "/categories/sofa.jpg",
-    "/categories/bed.png",
-  ];
-
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleBuyNow = () => {
     if (!isAuthenticated) return navigate("/login");
@@ -50,26 +35,21 @@ export default function Home() {
     <div className="w-full bg-gradient-to-b from-sky-50 via-white to-sky-50">
 
       {/* ================================================= */}
-      {/* HERO SECTION (SMOOTH SLIDER) */}
+      {/* HERO SECTION (SINGLE PREMIUM IMAGE) */}
       {/* ================================================= */}
       <section className="relative h-[80vh] overflow-hidden">
 
-        <div
-          className="flex h-full transition-transform duration-1000 ease-in-out"
-          style={{ transform: `translateX(-${current * 100}%)` }}
-        >
-          {heroImages.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt="hero"
-              className="w-full h-full object-cover flex-shrink-0"
-            />
-          ))}
-        </div>
+        {/* Background Image */}
+        <img
+          src="/categories/hero.jpg"
+          alt="hero"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
 
+        {/* Overlay */}
         <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>
 
+        {/* Animated Content */}
         <div className="absolute inset-0 flex items-center justify-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -164,7 +144,7 @@ export default function Home() {
 
           <p className="text-slate-600 mb-6 leading-relaxed">
             MM Furniture blends craft and comfort — we design furniture to make rooms feel lived-in.
-            Every piece is tested for durability and style.
+            Every piece is tested for durability and style. We bring modern designs with timeless elegance.
           </p>
 
           <button
@@ -190,6 +170,48 @@ export default function Home() {
               <div className="font-semibold">{f}</div>
             </div>
           ))}
+        </div>
+      </motion.section>
+
+      {/* ================================================= */}
+      {/* WHY CHOOSE US */}
+      {/* ================================================= */}
+      <motion.section
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-slate-50 py-12 sm:py-16"
+      >
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+            Why Choose Us
+          </h2>
+
+          <p className="text-slate-600 text-sm sm:text-base mb-10">
+            We combine comfort, quality, and service — making it easy to choose furniture that lasts.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { label: "Years Experience", value: "7" },
+              { label: "Branches", value: "2" },
+              { label: "Furniture Sold", value: "10k+" },
+              { label: "Variants", value: "260+" },
+            ].map((s, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                className="bg-gradient-to-tr from-sky-50 to-sky-100 p-6 rounded-xl shadow hover:shadow-2xl transition"
+              >
+                <div className="text-3xl font-bold text-sky-600">
+                  {s.value}
+                </div>
+                <div className="text-sm text-slate-600 mt-2">
+                  {s.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </motion.section>
 

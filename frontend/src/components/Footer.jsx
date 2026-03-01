@@ -17,12 +17,13 @@ const Footer = () => {
           </div>
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
-            <p className="text-gray-400">Email: info@mmfurniture.com</p>
-            <p className="text-gray-400">Phone: +91 1234567890</p>
+            <p className="text-gray-400">Email: shaikmuskan0805@gmail.com</p>
+            <p className="text-gray-400">Phone: +91 9494799534</p>
+            <p className="text-gray-400">Phone: +91 7981231001</p>
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-4 text-center text-gray-400">
-          <p>&copy; 2024 MM Furniture. All rights reserved.</p>
+          <p>&copy; 2026 MM Furniture. All rights reserved.</p>
         </div>
       </div>
     </footer>
