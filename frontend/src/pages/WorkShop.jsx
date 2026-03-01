@@ -25,7 +25,7 @@ const Workshop = () => {
 
     try {
       // 🔹 You can connect this to backend later
-      await api.post("/api/workshop-request", formData);
+      await api.post("/workshop-request", formData);
 
       toast.success("✨ Request sent successfully! Our workshop team will contact you soon.");
 
@@ -62,7 +62,7 @@ const Workshop = () => {
         {/* LEFT IMAGE */}
         <div>
           <img
-            src="./../public/categories/workshop.png"
+            src="/categories/workshop.png"
             alt="Workshop"
             className="rounded-2xl shadow-lg object-cover w-full h-[400px]"
           />
