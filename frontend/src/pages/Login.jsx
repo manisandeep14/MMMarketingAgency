@@ -81,7 +81,7 @@ const Login = () => {
           })
         );
 
-        toast.success("Logged in with Google 🚀");
+        toast.success("Logged in with Google");
         navigate(res.data.user.role === "admin" ? "/admin" : "/");
       }
     } catch (error) {

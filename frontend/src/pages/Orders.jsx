@@ -28,11 +28,11 @@ const Orders = () => {
           !notifiedOrders.includes(order._id)
         ) {
           if (order.orderStatus === "Delivered") {
-            toast.success("🎉 Your order has been delivered successfully!");
+            toast.success("Your order has been delivered successfully!");
           }
 
           if (order.orderStatus === "Cancelled") {
-            toast.error("⚠️ Your order has been cancelled.");
+            toast.error("Your order has been cancelled.");
           }
 
           notifiedOrders.push(order._id);

@@ -135,7 +135,7 @@ export const createOrder = async (req, res) => {
         if (admin.email) {
           sendEmail({
             to: admin.email,
-            subject: "🚨 New Order Placed - MM Furniture",
+            subject: "New Order Placed - MM Furniture",
             html: adminHtml,
           }).catch((err) => {
             console.error("Admin email failed:", err.message);
@@ -237,7 +237,7 @@ export const updateOrderStatus = async (req, res) => {
           subject:
             status === "Delivered"
               ? "Your Order Has Been Delivered 🎉"
-              : "Your Order Has Been Cancelled ⚠️",
+              : "Your Order Has Been Cancelled ",
           html: `
             <h2>Order Update</h2>
             <p>Hello ${order.user.name},</p>
