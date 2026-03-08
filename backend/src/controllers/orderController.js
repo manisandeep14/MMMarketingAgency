@@ -291,6 +291,8 @@ export const getDeliveryPrice = async (req, res) => {
 
   } catch (error) {
 
+    console.log("DELIVERY PRICE ERROR:", error);
+
     res.status(500).json({
       message: "Failed to calculate delivery price"
     });
