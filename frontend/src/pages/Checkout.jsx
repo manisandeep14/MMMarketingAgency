@@ -69,9 +69,12 @@ const Checkout = () => {
       const fullAddress =
         `${address.addressLine1} ${address.addressLine2} ${address.city} ${address.state} ${address.pincode}`;
 
-      const res = await api.post("/orders/delivery-price", {
-        address: fullAddress
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/orders/delivery-price`,
+        {
+          address: fullAddress
+        }
+      );
 
       setDeliveryPrice(res.data.deliveryPrice);
       setDeliveryDistance(res.data.distance);
