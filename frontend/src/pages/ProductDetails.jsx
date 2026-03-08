@@ -299,7 +299,7 @@ const ProductDetails = () => {
             <p className="text-xs sm:text-sm text-slate-500 mt-4">
               By ordering you agree to our terms and shipping time. Need help?{" "}
               <button
-                onClick={() => navigate("/contact")}
+                onClick={() => navigate("/Contact")}
                 className="text-sky-600 underline"
               >
                 Contact us

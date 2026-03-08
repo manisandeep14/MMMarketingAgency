@@ -25,6 +25,7 @@ import VerifyOTP from "./pages/VerifyOTP";
 import { useEffect, useState } from "react";
 import ServerLoader from "./components/ServerLoader";
 import Workshop from './pages/WorkShop';
+import Contact from './pages/Contact';
 import axios from "axios";
 
 
@@ -83,6 +84,7 @@ function App() {
           <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/workshop" element={<Workshop />} />
+          <Route path="/contact" element={<Contact />} />
           
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
