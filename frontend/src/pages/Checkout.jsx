@@ -67,7 +67,7 @@ const Checkout = () => {
     try {
 
       const fullAddress =
-        `${address.addressLine1} ${address.addressLine2} ${address.city} ${address.state} ${address.pincode}`;
+        `${address.addressLine1}, ${address.city}, ${address.state}, ${address.pincode}, India`;
 
       const res = await axios.post(
         `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/orders/delivery-price`,
@@ -80,7 +80,7 @@ const Checkout = () => {
       setDeliveryDistance(res.data.distance);
 
     } catch (error) {
-
+      console.log("Delivery price error:", error.response?.data || error);
       toast.error("Failed to calculate delivery price");
 
     }

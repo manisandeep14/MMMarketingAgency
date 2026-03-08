@@ -6,9 +6,8 @@ export const geocodeAddress = async (address) => {
 
   const res = await axios.get(url);
 
-  // VERY IMPORTANT CHECK
   if (!res.data.results || res.data.results.length === 0) {
-    throw new Error("Google could not find the address location");
+    throw new Error("Address not found by Google Maps");
   }
 
   const location = res.data.results[0].geometry.location;
@@ -17,4 +16,5 @@ export const geocodeAddress = async (address) => {
     lat: location.lat,
     lng: location.lng
   };
+
 };
