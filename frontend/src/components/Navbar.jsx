@@ -66,7 +66,7 @@ const Navbar = () => {
             <img
             src="/categories/logo.jpeg"
             alt="MM Furniture"
-            className="h-10 sm:h-12 w-auto object-contain"
+            className="h-8 sm:h-10 w-auto object-contain"
           />
           </Link>
 

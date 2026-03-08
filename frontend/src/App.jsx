@@ -26,6 +26,8 @@ import { useEffect, useState } from "react";
 import ServerLoader from "./components/ServerLoader";
 import Workshop from './pages/WorkShop';
 import Contact from './pages/Contact';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import About from './pages/About';
 import axios from "axios";
 
 
@@ -85,12 +87,15 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/workshop" element={<Workshop />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/about" element={<About />} />
           
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
           <Route path="/admin/invites" element={<AdminRoute><AdminInvites /></AdminRoute>}/>
+          
           <Route
             path="/admin/invites"
             element={
