@@ -403,7 +403,7 @@ const Checkout = () => {
                 {validItems.map((item) => (
                   <div
                     key={item.product._id}
-                    className="flex gap-4 pb-4 border-b border-sky-100"
+                    className="flex items-start gap-4 pb-4 border-b border-sky-100"
                   >
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100">
                       {item.product.images?.[0]?.url ? (
@@ -419,51 +419,56 @@ const Checkout = () => {
                       )}
                     </div>
 
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm sm:text-base">
-                        {item.product.name}
-                      </h3>
+                    <div className="flex-1 flex justify-between gap-4">
 
-                      {/* PRODUCT DESCRIPTION */}
-                      {item.product.description && (
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2">
-                          {item.product.description}
-                        </p>
-                      )}
+                        {/* LEFT SIDE */}
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-sm sm:text-base">
+                            {item.product.name}
+                          </h3>
 
-                      {/* QUANTITY CONTROLS */}
-                      <div className="flex items-center gap-2 mt-2">
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.product._id, item.quantity - 1)
-                          }
-                          className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
-                        >
-                          -
-                        </button>
+                          {item.product.description && (
+                            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-lg">
+                              {item.product.description}
+                            </p>
+                          )}
+                        </div>
 
-                        <span className="text-sm font-medium w-6 text-center">
-                          {item.quantity}
-                        </span>
+                        {/* RIGHT SIDE */}
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.product._id, item.quantity - 1)
+                              }
+                              className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
+                            >
+                              -
+                            </button>
 
-                        <button
-                          onClick={() =>
-                            updateQuantity(
-                              item.product._id,
-                              Math.min(item.product.stock, item.quantity + 1)
-                            )
-                          }
-                          className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
-                        >
-                          +
-                        </button>
+                            <span className="text-sm font-medium w-6 text-center">
+                              {item.quantity}
+                            </span>
+
+                            <button
+                              onClick={() =>
+                                updateQuantity(
+                                  item.product._id,
+                                  Math.min(item.product.stock, item.quantity + 1)
+                                )
+                              }
+                              className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <p className="text-sky-600 font-bold text-sm sm:text-base">
+                            ₹{(item.product.price * item.quantity).toLocaleString()}
+                          </p>
+                        </div>
+
                       </div>
-
-                      {/* PRICE */}
-                      <p className="text-sky-600 font-bold text-sm sm:text-base mt-1">
-                        ₹{(item.product.price * item.quantity).toLocaleString()}
-                      </p>
-                    </div>
                   </div>
                 ))}
               </div>
