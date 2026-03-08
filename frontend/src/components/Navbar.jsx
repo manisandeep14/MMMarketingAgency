@@ -62,9 +62,12 @@ const Navbar = () => {
           {/* LOGO */}
           <Link
             to="/"
-            className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent"
           >
-            MM Furniture
+            <img
+            src="/categories/logo.jpeg"
+            alt="MM Furniture"
+            className="h-10 sm:h-12 w-auto object-contain"
+          />
           </Link>
 
           {/* DESKTOP LINKS */}

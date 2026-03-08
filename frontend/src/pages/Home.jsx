@@ -157,7 +157,7 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-4">
           {[
-            "Free Delivery",
+            "minimal Delivery Fee",
             "Secure Payment",
             "Free Installation",
             "Warranty",
@@ -193,10 +193,10 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { label: "Years Experience", value: "7" },
-              { label: "Branches", value: "2" },
+              { label: "Years Experience", value: "14" },
+              { label: "Customers", value: "1k+" },
               { label: "Furniture Sold", value: "10k+" },
-              { label: "Variants", value: "260+" },
+              { label: "Variants", value: "100+" },
             ].map((s, i) => (
               <motion.div
                 key={i}
