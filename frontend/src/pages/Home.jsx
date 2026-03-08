@@ -37,7 +37,7 @@ export default function Home() {
       {/* ================================================= */}
       {/* HERO SECTION (SINGLE PREMIUM IMAGE) */}
       {/* ================================================= */}
-      <section className="relative h-[80vh] overflow-hidden">
+      <section className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden">
 
         {/* Background Image */}
         <img

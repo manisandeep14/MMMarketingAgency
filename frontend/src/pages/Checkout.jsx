@@ -423,7 +423,16 @@ const Checkout = () => {
                       <h3 className="font-semibold text-sm sm:text-base">
                         {item.product.name}
                       </h3>
-                      <div className="flex items-center gap-2 mt-1">
+
+                      {/* PRODUCT DESCRIPTION */}
+                      {item.product.description && (
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2">
+                          {item.product.description}
+                        </p>
+                      )}
+
+                      {/* QUANTITY CONTROLS */}
+                      <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() =>
                             updateQuantity(item.product._id, item.quantity - 1)
@@ -439,18 +448,20 @@ const Checkout = () => {
 
                         <button
                           onClick={() =>
-                            updateQuantity(item.product._id, Math.min(item.product.stock, item.quantity + 1))
+                            updateQuantity(
+                              item.product._id,
+                              Math.min(item.product.stock, item.quantity + 1)
+                            )
                           }
                           className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
                         >
                           +
                         </button>
-                      </div>        
-                      <p className="text-sky-600 font-bold text-sm sm:text-base">
-                        ₹
-                        {(
-                          item.product.price * item.quantity
-                        ).toLocaleString()}
+                      </div>
+
+                      {/* PRICE */}
+                      <p className="text-sky-600 font-bold text-sm sm:text-base mt-1">
+                        ₹{(item.product.price * item.quantity).toLocaleString()}
                       </p>
                     </div>
                   </div>
