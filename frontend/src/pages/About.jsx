@@ -159,7 +159,6 @@ const About = () => {
         {[
           { label: "Years Experience", value: "14" },
           { label: "Customers", value: "1K+" },
-          { label: "Branches", value: "1" },
           { label: "Furniture Types", value: "100+" },
         ].map((stat, i) => (
           <div

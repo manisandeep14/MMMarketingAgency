@@ -41,6 +41,7 @@ const Products = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, loading } = useSelector((state) => state.products);
+
   const [showFilters, setShowFilters] = useState(false);
 
   /* ---------------- FILTER STATE ---------------- */
@@ -57,23 +58,29 @@ const Products = () => {
   useEffect(() => {
     const timer = setTimeout(fetchProducts, 400);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const fetchProducts = async () => {
     try {
       dispatch(setLoading(true));
+
       const params = new URLSearchParams();
 
       if (filters.category !== "All")
         params.append("category", filters.category);
+
       if (filters.search) params.append("search", filters.search);
+
       if (filters.tag) params.append("tag", filters.tag);
+
       if (filters.minPrice) params.append("minPrice", filters.minPrice);
+
       if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
+
       if (filters.sort) params.append("sort", filters.sort);
 
       const res = await api.get(`/products?${params.toString()}`);
+
       dispatch(setProducts(res.data.products || []));
     } catch (error) {
       toast.error("Failed to load products");
@@ -82,14 +89,18 @@ const Products = () => {
     }
   };
 
-  /* ---------------- FILTER HANDLER ---------------- */
+  /* ---------------- UPDATE FILTER ---------------- */
   const updateFilter = (key, value) => {
     const updated = { ...filters, [key]: value };
+
     setFilters(updated);
 
     const params = {};
+
     if (updated.category !== "All") params.category = updated.category;
+
     if (updated.search) params.search = updated.search;
+
     if (updated.tag) params.tag = updated.tag;
 
     setSearchParams(params);
@@ -97,33 +108,63 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-16">
+
       <div className="max-w-7xl mx-auto px-4 pt-8">
 
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-extrabold text-slate-900">
+        {/* ================= HEADER ================= */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
             Our Products
           </h1>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="px-4 py-2 rounded-full border border-sky-200 text-sky-600 font-semibold"
-          >
-            {showFilters ? "✕ Close Filters" : "☰ Filters"}
-          </button>
+
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+
+            {/* SEARCH */}
+            <input
+              type="text"
+              placeholder="Search furniture..."
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
+              className="
+                flex-1
+                sm:w-64
+                px-4
+                py-2
+                rounded-full
+                border
+                border-sky-200
+                focus:outline-none
+                focus:ring-2
+                focus:ring-sky-300
+              "
+            />
+
+            {/* FILTER BUTTON */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="
+                px-4
+                py-2
+                rounded-full
+                border
+                border-sky-200
+                text-sky-600
+                font-semibold
+              "
+            >
+              {showFilters ? "✕" : "Filters"}
+            </button>
+
+          </div>
+
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* FILTER PANEL */}
+          {/* ================= FILTER PANEL ================= */}
           {showFilters && (
             <div className="lg:w-64 bg-white border border-sky-200 rounded-xl p-4 space-y-4">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={filters.search}
-                onChange={(e) => updateFilter("search", e.target.value)}
-                className="input-field"
-              />
 
               <select
                 className="input-field"
@@ -150,6 +191,7 @@ const Products = () => {
               </select>
 
               <div className="grid grid-cols-2 gap-2">
+
                 <input
                   type="number"
                   placeholder="Min ₹"
@@ -159,6 +201,7 @@ const Products = () => {
                     updateFilter("minPrice", e.target.value)
                   }
                 />
+
                 <input
                   type="number"
                   placeholder="Max ₹"
@@ -168,58 +211,72 @@ const Products = () => {
                     updateFilter("maxPrice", e.target.value)
                   }
                 />
+
               </div>
+
             </div>
           )}
 
-          {/* PRODUCTS GRID */}
+          {/* ================= PRODUCTS GRID ================= */}
           <div className="flex-1">
+
             {loading ? (
+
               <div className="text-center py-20">
                 Loading products...
               </div>
+
             ) : products.length === 0 ? (
+
               <div className="text-center py-16 text-gray-500">
                 No products found
               </div>
+
             ) : (
+
               <div
                 className="
-                grid 
-                grid-cols-1 
-                sm:grid-cols-2 
-                md:grid-cols-3 
-                lg:grid-cols-4 
-                xl:grid-cols-5 
-                gap-5
+                grid
+                grid-cols-2
+                sm:grid-cols-2
+                md:grid-cols-3
+                lg:grid-cols-4
+                xl:grid-cols-5
+                gap-4
               "
               >
+
                 {products.map((product) => {
+
                   const img =
                     normalizeImages(product.images)[0]?.url;
 
                   return (
+
                     <Link
                       key={product._id}
                       to={`/products/${product._id}`}
                       className="
-                        bg-white 
-                        rounded-xl 
-                        border border-sky-100 
-                        shadow-sm 
-                        hover:shadow-lg 
-                        transition-all duration-300 
-                        hover:-translate-y-1 
-                        p-3
+                        bg-white
+                        rounded-xl
+                        border
+                        border-sky-100
+                        shadow-sm
+                        hover:shadow-lg
+                        transition
+                        hover:-translate-y-1
+                        p-2 sm:p-3
                       "
                     >
+
                       {/* IMAGE */}
-                      <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden">
+                      <div className="relative aspect-[4/3] mb-2 rounded-lg overflow-hidden">
+
                         {img ? (
                           <img
                             src={img}
                             alt={product.name}
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                           />
                         ) : (
                           <div className="h-full flex items-center justify-center text-gray-400 text-sm">
@@ -232,20 +289,23 @@ const Products = () => {
                             NEW
                           </span>
                         )}
+
                         {product.tag === "popular" && (
                           <span className="absolute top-2 right-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">
                             POPULAR
                           </span>
                         )}
+
                         {product.tag === "special" && (
                           <span className="absolute top-2 right-2 text-xs bg-purple-500 text-white px-2 py-1 rounded-full">
                             SPECIAL
                           </span>
                         )}
+
                       </div>
 
                       {/* CONTENT */}
-                      <h3 className="font-semibold text-base line-clamp-1">
+                      <h3 className="font-semibold text-sm sm:text-base line-clamp-1">
                         {product.name}
                       </h3>
 
@@ -254,23 +314,35 @@ const Products = () => {
                       </p>
 
                       <div className="flex justify-between mt-2 items-center">
+
                         <span className="text-sky-600 font-bold text-sm">
                           ₹{product.price.toLocaleString()}
                         </span>
+
                         <span className="text-xs text-gray-500">
                           {product.stock > 0
                             ? "In stock"
                             : "Out of stock"}
                         </span>
+
                       </div>
+
                     </Link>
+
                   );
+
                 })}
+
               </div>
+
             )}
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 };

@@ -59,6 +59,21 @@ const Checkout = () => {
     );
   };
 
+  const updateQuantity = async (productId, newQty) => {
+    if (newQty < 1) return;
+
+    try {
+      const res = await api.put("/cart", {
+        productId,
+        quantity: newQty,
+      });
+
+      setCart(res.data.cart);
+    } catch (error) {
+      toast.error("Failed to update quantity");
+    }
+  };
+
   const validItems = cart.items?.filter((item) => item.product) || [];
 
   const handleAddressSubmit = async (e) => {
@@ -408,9 +423,29 @@ const Checkout = () => {
                       <h3 className="font-semibold text-sm sm:text-base">
                         {item.product.name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-slate-500">
-                        Qty: {item.quantity}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.product._id, item.quantity - 1)
+                          }
+                          className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
+                        >
+                          -
+                        </button>
+
+                        <span className="text-sm font-medium w-6 text-center">
+                          {item.quantity}
+                        </span>
+
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.product._id, Math.min(item.product.stock, item.quantity + 1))
+                          }
+                          className="w-7 h-7 flex items-center justify-center rounded border border-sky-300 text-sky-600"
+                        >
+                          +
+                        </button>
+                      </div>        
                       <p className="text-sky-600 font-bold text-sm sm:text-base">
                         ₹
                         {(

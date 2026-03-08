@@ -223,8 +223,8 @@ const ProductDetails = () => {
               {product.dimensions && (
                 <p>
                   <strong>Dimensions:</strong>{" "}
-                  {product.dimensions.length} × {product.dimensions.width} ×{" "}
-                  {product.dimensions.height} {product.dimensions.unit}
+                  {product.dimensions?.length} × {product.dimensions?.width} ×{" "}
+                  {product.dimensions?.height} {product.dimensions?.unit}
                 </p>
               )}
               <p>
