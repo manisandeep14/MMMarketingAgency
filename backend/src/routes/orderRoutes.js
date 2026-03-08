@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post('/razorpay/create', protect, createRazorpayOrder);
 router.post('/razorpay/verify', protect, verifyPayment);
-
+router.post("/delivery-price", getDeliveryPrice);
 router.post('/', protect, createOrder);
 router.get('/my-orders', protect, getMyOrders);
 router.get('/:id', protect, getOrderById);

@@ -1,0 +1,4 @@
+export const SHOP_LOCATION = {
+  lat: 14.45462340301152,
+  lng: 79.97155169999998
+};

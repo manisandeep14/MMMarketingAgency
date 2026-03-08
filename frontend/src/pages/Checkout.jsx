@@ -15,6 +15,8 @@ const Checkout = () => {
   const [processing, setProcessing] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [deliveryPrice, setDeliveryPrice] = useState(0);
+  const [deliveryDistance, setDeliveryDistance] = useState(null);
 
   const [addressForm, setAddressForm] = useState({
     fullName: "",
@@ -41,6 +43,7 @@ const Checkout = () => {
           user.addresses.find((addr) => addr.isDefault) ||
           user.addresses[0];
         setSelectedAddress(defaultAddr);
+        fetchDeliveryPrice(defaultAddr);
       }
       setLoading(false);
     } catch (error) {
@@ -57,6 +60,28 @@ const Checkout = () => {
         0
       ) || 0
     );
+  };
+
+  const fetchDeliveryPrice = async (address) => {
+
+    try {
+
+      const fullAddress =
+        `${address.addressLine1} ${address.addressLine2} ${address.city} ${address.state} ${address.pincode}`;
+
+      const res = await api.post("/orders/delivery-price", {
+        address: fullAddress
+      });
+
+      setDeliveryPrice(res.data.deliveryPrice);
+      setDeliveryDistance(res.data.distance);
+
+    } catch (error) {
+
+      toast.error("Failed to calculate delivery price");
+
+    }
+
   };
 
   const updateQuantity = async (productId, newQty) => {
@@ -90,6 +115,7 @@ const Checkout = () => {
             res.data.user.addresses.length - 1
           ];
         setSelectedAddress(newAddress);
+        fetchDeliveryPrice(newAddress);
         setShowAddressForm(false);
       }
     } catch (error) {
@@ -122,7 +148,7 @@ const Checkout = () => {
     setProcessing(true);
 
     try {
-      const total = calculateTotal();
+      const total = calculateTotal() + deliveryPrice;
 
       const razorpayResponse = await api.post(
         "/orders/razorpay/create",
@@ -145,21 +171,21 @@ const Checkout = () => {
         order_id: razorpayResponse.data.order.id,
         handler: async (response) => {
           try {
-            const total = calculateTotal();
-
+            
             // ✅ Step 1: Verify payment signature
             const verifyRes = await api.post("/orders/razorpay/verify", {
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,
             });
-
+            
             if (!verifyRes.data.isValid) {
               toast.error("Payment verification failed");
               setProcessing(false);
               return;
             }
-
+            const itemsPrice = calculateTotal();
+            // const total = calculateTotal() + deliveryPrice;
             // ✅ Step 2: Create order only after verification
             const orderData = {
               shippingAddress: selectedAddress,
@@ -169,9 +195,9 @@ const Checkout = () => {
                 razorpaySignature: response.razorpay_signature,
                 status: "Completed",
               },
-              itemsPrice: total,
-              shippingPrice: 0,
-              totalPrice: total,
+              itemsPrice: itemsPrice,
+              shippingPrice: deliveryPrice,
+              totalPrice: itemsPrice + deliveryPrice,
             };
 
             const orderResponse = await api.post("/orders", orderData);
@@ -252,7 +278,10 @@ const Checkout = () => {
                       <input
                         type="radio"
                         checked={selectedAddress?._id === addr._id}
-                        onChange={() => setSelectedAddress(addr)}
+                        onChange={() => {
+                          setSelectedAddress(addr);
+                          fetchDeliveryPrice(addr);
+                        }}
                         className="mr-3"
                       />
                       <strong>{addr.fullName}</strong> – {addr.phone}
@@ -491,14 +520,22 @@ const Checkout = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span className="text-green-600 font-medium">
-                    FREE
-                  </span>
+                  <div className="text-right">
+                    <div className="text-green-600 font-medium">
+                      {deliveryPrice === 0 ? "FREE" : `₹${deliveryPrice}`}
+                    </div>
+
+                    {deliveryDistance && (
+                      <div className="text-xs text-slate-500">
+                        {deliveryDistance} km from store
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="border-t pt-4 flex justify-between font-bold">
                   <span>Total</span>
                   <span className="text-sky-600">
-                    ₹{calculateTotal().toLocaleString()}
+                    ₹{(calculateTotal() + deliveryPrice).toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -6,6 +6,10 @@ import crypto from 'crypto';
 import { sendEmail } from "../config/brevo.js";
 import { getOrderConfirmationEmailTemplate } from '../utils/emailTemplates.js';
 import User from "../models/User.js";
+import { geocodeAddress } from "../utils/geocodeAddress.js";
+import { calculateDistance } from "../utils/calculateDistance.js";
+import { calculateDeliveryPrice } from "../utils/deliveryPricing.js";
+import { SHOP_LOCATION } from "../config/shopLocation.js";
 
 const getRazorpayInstance = () => {
   if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
@@ -260,4 +264,37 @@ export const updateOrderStatus = async (req, res) => {
     console.error("Update Status Error:", error);
     res.status(500).json({ success: false, message: error.message });
   }
+};
+
+
+export const getDeliveryPrice = async (req, res) => {
+
+  try {
+
+    const { address } = req.body;
+
+    const coords = await geocodeAddress(address);
+
+    const distance = calculateDistance(
+      SHOP_LOCATION.lat,
+      SHOP_LOCATION.lng,
+      coords.lat,
+      coords.lng
+    );
+
+    const deliveryPrice = calculateDeliveryPrice(distance);
+
+    res.json({
+        deliveryPrice,
+        distance: Number(distance.toFixed(2))
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Failed to calculate delivery price"
+    });
+
+  }
+
 };
