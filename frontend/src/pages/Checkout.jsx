@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../utils/api";
+import axios from "axios";
 import { setUser } from "../redux/slices/authSlice";
 
 const Checkout = () => {
