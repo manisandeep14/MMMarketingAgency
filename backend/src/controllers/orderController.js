@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import { sendEmail } from "../config/brevo.js";
 import { getOrderConfirmationEmailTemplate } from '../utils/emailTemplates.js';
 import User from "../models/User.js";
-import { geocodeAddress } from "../utils/geocodeAddress.js";
+// import { geocodeAddress } from "../utils/geocodeAddress.js";
 import { calculateDistance } from "../utils/calculateDistance.js";
 import { calculateDeliveryPrice } from "../utils/deliveryPricing.js";
 import { SHOP_LOCATION } from "../config/shopLocation.js";
@@ -271,27 +271,23 @@ export const getDeliveryPrice = async (req, res) => {
 
   try {
 
-    const { address } = req.body;
-
-    const coords = await geocodeAddress(address);
+    const { lat, lng } = req.body;
 
     const distance = calculateDistance(
       SHOP_LOCATION.lat,
       SHOP_LOCATION.lng,
-      coords.lat,
-      coords.lng
+      lat,
+      lng
     );
 
     const deliveryPrice = calculateDeliveryPrice(distance);
 
     res.json({
-        deliveryPrice,
-        distance: Number(distance.toFixed(2))
+      deliveryPrice,
+      distance: Number(distance.toFixed(2))
     });
 
   } catch (error) {
-
-    console.log("DELIVERY PRICE ERROR:", error);
 
     res.status(500).json({
       message: "Failed to calculate delivery price"

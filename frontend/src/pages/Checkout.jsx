@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../utils/api";
-import axios from "axios";
 import { setUser } from "../redux/slices/authSlice";
+import MapPicker from "../components/MapPicker";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const Checkout = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [deliveryDistance, setDeliveryDistance] = useState(null);
+  const [location, setLocation] = useState(null);
 
   const [addressForm, setAddressForm] = useState({
     fullName: "",
@@ -34,6 +35,12 @@ const Checkout = () => {
     fetchCart();
   }, []);
 
+  useEffect(() => {
+    if (location) {
+      fetchDeliveryPrice();
+    }
+  }, [location]);
+
   const fetchCart = async () => {
     try {
       const response = await api.get("/cart");
@@ -44,7 +51,6 @@ const Checkout = () => {
           user.addresses.find((addr) => addr.isDefault) ||
           user.addresses[0];
         setSelectedAddress(defaultAddr);
-        fetchDeliveryPrice(defaultAddr);
       }
       setLoading(false);
     } catch (error) {
@@ -63,29 +69,20 @@ const Checkout = () => {
     );
   };
 
-  const fetchDeliveryPrice = async (address) => {
+  const fetchDeliveryPrice = async () => {
 
+    if (!location) return;
     try {
-
-      const fullAddress =
-        `${address.addressLine1}, ${address.city}, ${address.state}, ${address.pincode}, India`;
-
-      const res = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/orders/delivery-price`,
-        {
-          address: fullAddress
-        }
-      );
+      const res = await api.post("/orders/delivery-price", {
+        lat: location.lat,
+        lng: location.lng
+      });
 
       setDeliveryPrice(res.data.deliveryPrice);
       setDeliveryDistance(res.data.distance);
-
     } catch (error) {
-      console.log("Delivery price error:", error.response?.data || error);
-      toast.error("Failed to calculate delivery price");
-
+      toast.error("Failed to calculate delivery");
     }
-
   };
 
   const updateQuantity = async (productId, newQty) => {
@@ -119,7 +116,7 @@ const Checkout = () => {
             res.data.user.addresses.length - 1
           ];
         setSelectedAddress(newAddress);
-        fetchDeliveryPrice(newAddress);
+        // fetchDeliveryPrice(newAddress);
         setShowAddressForm(false);
       }
     } catch (error) {
@@ -140,6 +137,10 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select a delivery address");
+      return;
+    }
+    if (!location) {
+      toast.error("Please select delivery location on map");
       return;
     }
 
@@ -254,7 +255,7 @@ const Checkout = () => {
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
         <h1 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-slate-900">
-          Checkout Test
+          Checkout
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -284,7 +285,7 @@ const Checkout = () => {
                         checked={selectedAddress?._id === addr._id}
                         onChange={() => {
                           setSelectedAddress(addr);
-                          fetchDeliveryPrice(addr);
+                          // fetchDeliveryPrice(addr);
                         }}
                         className="mr-3"
                       />
@@ -299,6 +300,16 @@ const Checkout = () => {
                   ))}
                 </div>
               )}
+
+              <div className="mt-4 border border-sky-100 rounded-xl p-3">
+
+                <p className="text-sm font-semibold mb-2">
+                📍 Select Delivery Location
+                </p>
+
+                <MapPicker setLocation={setLocation} />
+
+              </div>
 
               {!showAddressForm ? (
                 <button
@@ -526,7 +537,7 @@ const Checkout = () => {
                   <span>Shipping</span>
                   <div className="text-right">
                     <div className="text-green-600 font-medium">
-                      {deliveryPrice === 0 ? "FREE" : `₹${deliveryPrice}`}
+                      {location ? `₹${deliveryPrice}` : "Select location"}
                     </div>
 
                     {deliveryDistance && (
@@ -546,7 +557,7 @@ const Checkout = () => {
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={processing || !selectedAddress}
+                disabled={processing || !selectedAddress || !location}
                 className="w-full py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 disabled:opacity-50"
               >
                 {processing ? "Processing..." : "Place Order"}
