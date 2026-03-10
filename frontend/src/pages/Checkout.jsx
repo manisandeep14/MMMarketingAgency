@@ -254,7 +254,7 @@ const Checkout = () => {
     <div className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-sky-50 pb-12 sm:pb-16">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 pt-6 sm:pt-8">
         <h1 className="text-2xl sm:text-4xl font-extrabold mb-6 sm:mb-8 text-slate-900">
-          Checkout
+          Checkout Test
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
