@@ -18,9 +18,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 // Shop emoji marker
 const shopIcon = L.divIcon({
   className: "shop-marker",
-  html: "🏪",
-  iconSize: [50, 50],
-  iconAnchor: [30, 30]
+  html: "🏢",
+  iconAnchor: [10, 30]
 });
 
 function LocationMarker({ setLocation }) {
