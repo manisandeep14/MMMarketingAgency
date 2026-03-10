@@ -19,7 +19,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const shopIcon = L.divIcon({
   className: "shop-marker",
   html: "🏢",
-  iconAnchor: [10, 30]
+  iconSize: [40, 40],
+  iconAnchor: [20, 40]
 });
 
 function LocationMarker({ setLocation }) {
@@ -76,7 +77,12 @@ export default function MapPicker({ setLocation }) {
         />
 
         {/* Shop Marker */}
-        <Marker position={shopLocation} icon={shopIcon} />
+        <Marker position={shopLocation} icon={shopIcon}>
+          <Popup>
+            🏢 Our Store <br />
+            Delivery starts here
+          </Popup>
+        </Marker>
 
         {/* User Marker */}
         <LocationMarker setLocation={setLocation} />
