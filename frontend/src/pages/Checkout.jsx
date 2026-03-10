@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../utils/api";
 import { setUser } from "../redux/slices/authSlice";
-import MapPicker from "../components/MapPicker";
+import MapPicker from "./MapPicker";
 
 const Checkout = () => {
   const navigate = useNavigate();
