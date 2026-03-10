@@ -19,8 +19,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const shopIcon = L.divIcon({
   className: "shop-marker",
   html: "🏢",
-  iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconSize: [30, 30],
+  iconAnchor: [15, 15]
 });
 
 function LocationMarker({ setLocation }) {
