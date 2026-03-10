@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import L from "leaflet";
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -19,8 +19,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const shopIcon = L.divIcon({
   className: "shop-marker",
   html: "🏪",
-  iconSize: [30, 30],
-  iconAnchor: [15, 15]
+  iconSize: [50, 50],
+  iconAnchor: [30, 30]
 });
 
 function LocationMarker({ setLocation }) {
@@ -34,10 +34,7 @@ function LocationMarker({ setLocation }) {
 
       setPosition([lat, lng]);
 
-      setLocation({
-        lat,
-        lng
-      });
+      setLocation({ lat, lng });
 
     }
   });
@@ -47,7 +44,23 @@ function LocationMarker({ setLocation }) {
 
 export default function MapPicker({ setLocation }) {
 
-  const shopLocation = [14.4426, 79.9865]; // your shop location
+  const shopLocation = [14.4426, 79.9865];
+
+  // ✅ GPS auto detect
+  useEffect(() => {
+
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      setLocation({ lat, lng });
+
+    });
+
+  }, [setLocation]);
 
   return (
 
@@ -66,12 +79,11 @@ export default function MapPicker({ setLocation }) {
         {/* Shop Marker */}
         <Marker position={shopLocation} icon={shopIcon} />
 
-        {/* User Click Marker */}
+        {/* User Marker */}
         <LocationMarker setLocation={setLocation} />
 
       </MapContainer>
 
     </div>
-
   );
 }
