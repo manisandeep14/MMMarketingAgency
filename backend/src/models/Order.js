@@ -53,6 +53,11 @@ const orderSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    deliveryLocation: {
+      lat: Number,
+      lng: Number,
+      mapLink: String
+    },
     totalPrice: {
       type: Number,
       required: true,

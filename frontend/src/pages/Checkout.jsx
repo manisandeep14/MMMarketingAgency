@@ -194,6 +194,11 @@ const Checkout = () => {
             // ✅ Step 2: Create order only after verification
             const orderData = {
               shippingAddress: selectedAddress,
+              deliveryLocation: {
+                lat: location.lat,
+                lng: location.lng,
+                mapLink: `https://www.google.com/maps?q=${location.lat},${location.lng}`
+              },
               paymentInfo: {
                 razorpayOrderId: response.razorpay_order_id,
                 razorpayPaymentId: response.razorpay_payment_id,

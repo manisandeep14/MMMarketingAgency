@@ -184,6 +184,18 @@ const OrderDetails = () => {
                 {order.shippingAddress.city}, {order.shippingAddress.state} –{' '}
                 {order.shippingAddress.pincode}
               </p>
+              {order.deliveryLocation?.mapLink && (
+                <div className="mt-3">
+                  <a
+                    href={order.deliveryLocation.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline text-sm"
+                  >
+                    📍 View Delivery Location on Map
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 

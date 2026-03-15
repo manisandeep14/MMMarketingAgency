@@ -71,7 +71,7 @@ export const verifyPayment = async (req, res) => {
 
 export const createOrder = async (req, res) => {
   try {
-    const { shippingAddress, paymentInfo, itemsPrice, shippingPrice, totalPrice } = req.body;
+    const { shippingAddress, paymentInfo, itemsPrice, shippingPrice, totalPrice, deliveryLocation } = req.body;
 
     const cart = await Cart.findOne({ user: req.user.id }).populate('items.product');
 
@@ -103,6 +103,7 @@ export const createOrder = async (req, res) => {
       user: req.user.id,
       orderItems,
       shippingAddress,
+      deliveryLocation,
       paymentInfo,
       itemsPrice,
       shippingPrice,
