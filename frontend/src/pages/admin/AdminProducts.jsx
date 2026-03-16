@@ -83,18 +83,7 @@ const AdminProducts = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const [categories, setCategories] = useState([
-  "Sofa",
-  "Bed",
-  "Chair",
-  "Table",
-  "Cabinet",
-  "Wardrobe",
-  "Decor",
-  "Other"
-  ]);
-
-  const [customCategory, setCustomCategory] = useState("");
+  const categories = ["Sofa", "Bed", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
 
   useEffect(() => {
     fetchProducts();
@@ -382,67 +371,9 @@ const AdminProducts = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-
-                {/* CATEGORY SECTION */}
-                <div>
-                  <select
-                    className="input-field"
-                    value={formData.category}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFormData({ ...formData, category: value });
-
-                      if (value !== "Other") {
-                        setCustomCategory("");
-                      }
-                    }}
-                  >
-                    {categories.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-
-                  {formData.category === "Other" && (
-                    <input
-                      type="text"
-                      className="input-field mt-2"
-                      placeholder="Enter new category"
-                      value={customCategory}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setCustomCategory(value);
-
-                        setFormData({
-                          ...formData,
-                          category: value,
-                        });
-
-                        if (value && !categories.includes(value)) {
-                          setCategories([
-                            ...categories.slice(0, -1),
-                            value,
-                            "Other",
-                          ]);
-                        }
-                      }}
-                    />
-                  )}
-                </div>
-
-                {/* MATERIAL */}
-                <input
-                  type="text"
-                  className="input-field"
-                  value={formData.material}
-                  onChange={(e) =>
-                    setFormData({ ...formData, material: e.target.value })
-                  }
-                  placeholder="Material"
-                />
-
-              </div>
+                <select className="input-field" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
+                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
 
                 <input type="text" className="input-field" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} placeholder="Material" />
                 <div>
@@ -464,6 +395,7 @@ const AdminProducts = () => {
                   </select>
                 </div>
 
+              </div>
 
               <input type="text" className="input-field" value={formData.color} onChange={(e) => setFormData({ ...formData, color: e.target.value })} placeholder="Color" />
 
