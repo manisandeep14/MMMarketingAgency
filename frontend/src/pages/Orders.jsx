@@ -220,17 +220,34 @@ const Orders = () => {
                   <div className="flex-1">
                     <div className="flex gap-3 overflow-x-auto pb-2">
                       {order.orderItems.slice(0, 3).map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 border border-sky-100"
-                        >
+                      <div key={index} className="flex gap-3 min-w-[200px] items-start">
+
+                        {/* IMAGE */}
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 border border-sky-100">
                           <img
-                            src={item.image || '/placeholder.png'}
+                            src={item.image || "/placeholder.png"}
                             alt={item.name}
                             className="w-full h-full object-cover"
                           />
                         </div>
-                      ))}
+
+                        {/* TEXT */}
+                        <div className="flex flex-col">
+
+                          <p className="font-semibold text-sm text-slate-800">
+                            {item.name}
+                          </p>
+
+                          {item.description && (
+                            <p className="text-xs text-slate-500 line-clamp-2">
+                              {item.description}
+                            </p>
+                          )}
+
+                        </div>
+
+                      </div>
+                    ))}
 
                       {order.orderItems.length > 3 && (
                         <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 bg-sky-50 rounded-xl flex items-center justify-center text-xs sm:text-sm font-semibold text-slate-600 border border-sky-100">
@@ -238,6 +255,7 @@ const Orders = () => {
                         </div>
                       )}
                     </div>
+
 
                     <Link
                       to={`/orders/${order._id}`}

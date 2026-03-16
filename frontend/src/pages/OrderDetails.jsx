@@ -149,10 +149,16 @@ const OrderDetails = () => {
                       )}
                     </div>
 
+
                     <div className="flex-1">
                       <h3 className="font-semibold text-sm sm:text-base">
                         {item.name}
                       </h3>
+                      {item.description && (
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
                       <p className="text-xs sm:text-sm text-slate-600">
                         Quantity: {item.quantity}
                       </p>

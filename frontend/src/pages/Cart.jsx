@@ -129,6 +129,11 @@ const Cart = () => {
                       <p className="text-slate-500 text-xs sm:text-sm mt-1">
                         {item.product.category}
                       </p>
+                      {item.product.description && (
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1 line-clamp-2">
+                          {item.product.description}
+                        </p>
+                      )}
                       <p className="text-sky-600 font-bold mt-2 text-base sm:text-lg">
                         ₹{item.product.price.toLocaleString()}
                       </p>
