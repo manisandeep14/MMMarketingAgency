@@ -73,25 +73,36 @@ const AdminOrders = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Manage Orders</h1>
-        <div className="flex gap-4">
+      <div className="mb-8">
+
+        {/* ✅ Title - Full Row */}
+        <h1 className="text-3xl font-bold mb-4">
+          Manage Orders
+        </h1>
+
+        {/* ✅ Controls Row */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           
-          {/* ✅ NEW: Filter Dropdown */}
+          {/* Filter Styled Like Button */}
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="input-field"
+            className="px-4 py-2 rounded-lg bg-primary-600 text-white font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 w-full sm:w-auto"
           >
-            <option value="active">Active (Pending, Processing, Shipped)</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="all">All Orders</option>
+            <option value="active" className="text-black">Active Orders</option>
+            <option value="delivered" className="text-black">Delivered</option>
+            <option value="cancelled" className="text-black">Cancelled</option>
+            <option value="all" className="text-black">All Orders</option>
           </select>
 
-          <Link to="/admin" className="btn-secondary">
+          {/* Back Button */}
+          <Link
+            to="/admin"
+            className="btn-secondary w-full sm:w-auto text-center"
+          >
             Back to Dashboard
           </Link>
+
         </div>
       </div>
 
