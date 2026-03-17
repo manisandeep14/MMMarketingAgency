@@ -7,6 +7,10 @@ const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ NEW: filter state
+  const [filter, setFilter] = useState('active'); 
+  // active = Pending, Processing, Shipped
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -43,6 +47,20 @@ const AdminOrders = () => {
     return colors[status] || 'bg-gray-100 text-gray-800';
   };
 
+  // ✅ NEW: filter logic
+  const filteredOrders = orders.filter((order) => {
+    if (filter === 'active') {
+      return ['Pending', 'Processing', 'Shipped'].includes(order.orderStatus);
+    }
+    if (filter === 'delivered') {
+      return order.orderStatus === 'Delivered';
+    }
+    if (filter === 'cancelled') {
+      return order.orderStatus === 'Cancelled';
+    }
+    return true; // all
+  });
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
@@ -54,20 +72,36 @@ const AdminOrders = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Manage Orders</h1>
-        <Link to="/admin" className="btn-secondary">
-          Back to Dashboard
-        </Link>
+        <div className="flex gap-4">
+          
+          {/* ✅ NEW: Filter Dropdown */}
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="input-field"
+          >
+            <option value="active">Active (Pending, Processing, Shipped)</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="all">All Orders</option>
+          </select>
+
+          <Link to="/admin" className="btn-secondary">
+            Back to Dashboard
+          </Link>
+        </div>
       </div>
 
-      {orders.length === 0 ? (
+      {filteredOrders.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-xl text-gray-600">No orders found</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => (
+          {filteredOrders.map((order) => (
             <div key={order._id} className="card p-6">
               <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
                 <div>
@@ -82,8 +116,14 @@ const AdminOrders = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-600">Total</p>
-                  <p className="text-2xl font-bold text-primary-600">₹{order.totalPrice.toLocaleString()}</p>
-                  <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.orderStatus)}`}>
+                  <p className="text-2xl font-bold text-primary-600">
+                    ₹{order.totalPrice.toLocaleString()}
+                  </p>
+                  <span
+                    className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                      order.orderStatus
+                    )}`}
+                  >
                     {order.orderStatus}
                   </span>
                 </div>
@@ -92,7 +132,9 @@ const AdminOrders = () => {
               <div className="border-t pt-4 flex flex-wrap gap-2">
                 <select
                   value={order.orderStatus}
-                  onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                  onChange={(e) =>
+                    updateOrderStatus(order._id, e.target.value)
+                  }
                   className="input-field w-auto"
                 >
                   <option value="Pending">Pending</option>
@@ -101,6 +143,7 @@ const AdminOrders = () => {
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
+
                 <Link to={`/orders/${order._id}`} className="btn-secondary">
                   View Details
                 </Link>
