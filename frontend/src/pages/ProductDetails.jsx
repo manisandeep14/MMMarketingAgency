@@ -150,7 +150,7 @@ const ProductDetails = () => {
           {/* LEFT SECTION */}
           <div>
             <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-md border border-sky-100">
-              <div className="aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
                 {mainImage ? (
                   <img
                     src={mainImage}
@@ -162,6 +162,17 @@ const ProductDetails = () => {
                     No Image
                   </div>
                 )}
+                {/* Wishlist button on image */}
+                <button
+                  onClick={handleWishlistToggle}
+                  className="absolute top-3 left-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-105 transition"
+                >
+                  {isInWishlist ? (
+                    <FaHeart className="text-red-500" />
+                  ) : (
+                    <FaRegHeart className="text-slate-600" />
+                  )}
+                </button>
               </div>
 
               {/* Thumbnails */}
@@ -271,7 +282,7 @@ const ProductDetails = () => {
               <button
                 onClick={handleAddToCart}
                 disabled={product.stock === 0}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-lg bg-sky-600 text-white font-semibold"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3 rounded-lg bg-white text-sky-600 border border-sky-600 font-semibold hover:bg-sky-50 transition"
               >
                 <FaShoppingCart />
                 {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
@@ -284,7 +295,7 @@ const ProductDetails = () => {
                 Buy Now
               </button>
 
-              <button
+              {/* <button
                 onClick={handleWishlistToggle}
                 className="w-full sm:w-14 h-12 rounded-lg bg-white border border-sky-100 flex items-center justify-center shadow-sm"
               >
@@ -293,7 +304,7 @@ const ProductDetails = () => {
                 ) : (
                   <FaRegHeart className="text-slate-600" />
                 )}
-              </button>
+              </button> */}
             </div>
 
             <p className="text-xs sm:text-sm text-slate-500 mt-4">
