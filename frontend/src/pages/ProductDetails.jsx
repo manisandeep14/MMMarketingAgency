@@ -7,7 +7,6 @@ import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft } from "react-icons/fa
 import { setProduct, setLoading } from "../redux/slices/productSlice";
 import { setCart } from "../redux/slices/cartSlice";
 import { setWishlist } from "../redux/slices/wishlistSlice";
-import {fetchWishlist}from "../redux/slices/wishlistSlice";
 import api from "../utils/api";
 
 // ✅ Normalize backend image formats
@@ -46,7 +45,17 @@ const ProductDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    dispatch(fetchWishlist());
+    const loadWishlist = async () => {
+      try {
+        dispatch(setLoading(true));
+        const res = await api.get("/wishlist");
+        dispatch(setWishlist(res.data.wishlist));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    loadWishlist();
   }, []);
 
   const fetchProduct = async () => {
