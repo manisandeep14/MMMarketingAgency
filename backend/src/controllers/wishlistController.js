@@ -32,10 +32,14 @@ export const addToWishlist = async (req, res) => {
         products: [productId],
       });
     } else {
-      if (wishlist.products.includes(productId)) {
-        return res.status(400).json({ success: false, message: 'Product already in wishlist' });
+      // ✅ FIXED LOGIC
+      const exists = wishlist.products.some(
+        (id) => id.toString() === productId
+      );
+
+      if (!exists) {
+        wishlist.products.push(productId);
       }
-      wishlist.products.push(productId);
     }
 
     await wishlist.save();
@@ -43,7 +47,7 @@ export const addToWishlist = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Product added to wishlist',
+      message: 'Wishlist updated',
       wishlist,
     });
   } catch (error) {

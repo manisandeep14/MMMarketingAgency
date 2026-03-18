@@ -7,6 +7,7 @@ import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft } from "react-icons/fa
 import { setProduct, setLoading } from "../redux/slices/productSlice";
 import { setCart } from "../redux/slices/cartSlice";
 import { setWishlist } from "../redux/slices/wishlistSlice";
+import {fetchWishlist}from "../redux/slices/wishlistSlice";
 import api from "../utils/api";
 
 // ✅ Normalize backend image formats
@@ -44,6 +45,10 @@ const ProductDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  useEffect(() => {
+    dispatch(fetchWishlist());
+  }, []);
+
   const fetchProduct = async () => {
     try {
       dispatch(setLoading(true));
@@ -61,7 +66,7 @@ const ProductDetails = () => {
   const mainImage = imgs[selectedImage]?.url || imgs[0]?.url;
 
   const isInWishlist = wishlist?.products?.some(
-    (p) => p._id === product?._id
+    (p) => p._id?.toString() === product?._id?.toString()
   );
 
   const handleAddToCart = async () => {
@@ -96,39 +101,28 @@ const ProductDetails = () => {
   };
 
   const handleWishlistToggle = async () => {
-  if (!isAuthenticated) {
-    toast.error("Please login to manage wishlist");
-    navigate("/login");
-    return;
-  }
-
-  // 🔥 instant UI change
-  let updatedWishlist;
-
-  if (isInWishlist) {
-    updatedWishlist = {
-      ...wishlist,
-      products: wishlist.products.filter(p => p._id !== product._id)
-    };
-  } else {
-    updatedWishlist = {
-      ...wishlist,
-      products: [...wishlist.products, product]
-    };
-  }
-
-  dispatch(setWishlist(updatedWishlist));
-
-  try {
-    if (isInWishlist) {
-      await api.delete(`/wishlist/${product._id}`);
-    } else {
-      await api.post("/wishlist", { productId: product._id });
+    if (!isAuthenticated) {
+      toast.error("Please login to manage wishlist");
+      navigate("/login");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+
+    try {
+      if (isInWishlist) {
+        const response = await api.delete(`/wishlist/${product._id}`);
+        dispatch(setWishlist(response.data.wishlist));
+        toast.success("Removed from wishlist");
+      } else {
+        const response = await api.post("/wishlist", {
+          productId: product._id,
+        });
+        dispatch(setWishlist(response.data.wishlist));
+        toast.success("Added to wishlist!");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update wishlist");
+    }
+  };
 
   if (loading || !product) {
     return (
