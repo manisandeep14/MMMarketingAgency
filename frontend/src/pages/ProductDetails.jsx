@@ -96,28 +96,39 @@ const ProductDetails = () => {
   };
 
   const handleWishlistToggle = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login to manage wishlist");
-      navigate("/login");
-      return;
-    }
+  if (!isAuthenticated) {
+    toast.error("Please login to manage wishlist");
+    navigate("/login");
+    return;
+  }
 
-    try {
-      if (isInWishlist) {
-        const response = await api.delete(`/wishlist/${product._id}`);
-        dispatch(setWishlist(response.data.wishlist));
-        toast.success("Removed from wishlist");
-      } else {
-        const response = await api.post("/wishlist", {
-          productId: product._id,
-        });
-        dispatch(setWishlist(response.data.wishlist));
-        toast.success("Added to wishlist!");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to update wishlist");
+  // 🔥 instant UI change
+  let updatedWishlist;
+
+  if (isInWishlist) {
+    updatedWishlist = {
+      ...wishlist,
+      products: wishlist.products.filter(p => p._id !== product._id)
+    };
+  } else {
+    updatedWishlist = {
+      ...wishlist,
+      products: [...wishlist.products, product]
+    };
+  }
+
+  dispatch(setWishlist(updatedWishlist));
+
+  try {
+    if (isInWishlist) {
+      await api.delete(`/wishlist/${product._id}`);
+    } else {
+      await api.post("/wishlist", { productId: product._id });
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   if (loading || !product) {
     return (
