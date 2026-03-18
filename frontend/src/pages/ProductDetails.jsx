@@ -165,12 +165,16 @@ const ProductDetails = () => {
                 {/* Wishlist button on image */}
                 <button
                   onClick={handleWishlistToggle}
-                  className="absolute top-3 left-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-105 transition"
+                  className={`absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-all duration-200
+                    ${isInWishlist 
+                      ? "bg-red-100 hover:scale-110 active:scale-95" 
+                      : "bg-white/80 backdrop-blur hover:scale-110 active:scale-95"
+                    }`}
                 >
                   {isInWishlist ? (
-                    <FaHeart className="text-red-500" />
+                    <FaHeart className="text-red-500 drop-shadow" />
                   ) : (
-                    <FaRegHeart className="text-slate-600" />
+                    <FaRegHeart className="text-slate-700 drop-shadow" />
                   )}
                 </button>
               </div>
