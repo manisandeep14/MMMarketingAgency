@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { useSwipeable } from "react-swipeable";
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
 import { setProduct, setLoading } from "../redux/slices/productSlice";
 import { setCart } from "../redux/slices/cartSlice";
@@ -97,6 +98,17 @@ const ProductDetails = () => {
     navigate(`/products/${nextProduct._id}`);
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (hasNext) goToNext();
+    },
+    onSwipedRight: () => {
+      if (hasPrev) goToPrev();
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
+
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       toast.error("Please login to add items to cart");
@@ -163,8 +175,8 @@ const ProductDetails = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 py-6 sm:py-8">
+  return (  
+    <div {...handlers} className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 py-6 sm:py-8">
       {hasPrev && (
       <button
         onClick={goToPrev}
