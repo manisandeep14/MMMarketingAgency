@@ -207,7 +207,9 @@ export const updateProduct = async (req, res) => {
     product.material = updatedData.material ?? product.material;
     product.color = updatedData.color ?? product.color;
 
-    product.tag = updatedData.tag ?? product.tag;
+    if (updatedData.tag !== undefined) {
+      product.tag = updatedData.tag === "none" ? "" : updatedData.tag;
+    }
 
     if (updatedData.dimensions) {
       try {
