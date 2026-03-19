@@ -33,7 +33,7 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { product, loading } = useSelector((state) => state.products);
+  const { product, products, loading } = useSelector((state) => state.products);
   const { wishlist } = useSelector((state) => state.wishlist);
 
   const [quantity, setQuantity] = useState(1);
@@ -74,9 +74,28 @@ const ProductDetails = () => {
   const imgs = normalizeImages(product?.images || []);
   const mainImage = imgs[selectedImage]?.url || imgs[0]?.url;
 
+  const currentIndex = products.findIndex(
+    (p) => p._id === id
+  );
+
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < products.length - 1;
+
   const isInWishlist = wishlist?.products?.some(
     (p) => p._id?.toString() === product?._id?.toString()
   );
+
+  const goToPrev = () => {
+    if (!hasPrev) return;
+    const prevProduct = products[currentIndex - 1];
+    navigate(`/products/${prevProduct._id}`);
+  };
+
+  const goToNext = () => {
+    if (!hasNext) return;
+    const nextProduct = products[currentIndex + 1];
+    navigate(`/products/${nextProduct._id}`);
+  };
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -146,6 +165,27 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-sky-50 via-white to-sky-50 py-6 sm:py-8">
+      {hasPrev && (
+      <button
+        onClick={goToPrev}
+        className="hidden md:flex fixed left-4 top-1/2 -translate-y-1/2 z-50 
+        w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 
+        items-center justify-center hover:scale-110 transition"
+      >
+        ‹
+      </button>
+    )}
+
+    {hasNext && (
+      <button
+        onClick={goToNext}
+        className="hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-50 
+        w-12 h-12 rounded-full bg-white shadow-lg border border-sky-100 
+        items-center justify-center hover:scale-110 transition"
+      >
+        ›
+      </button>
+    )}
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
 
         {/* Back button */}
