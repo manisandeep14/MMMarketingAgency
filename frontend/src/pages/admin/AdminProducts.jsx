@@ -391,7 +391,7 @@ const AdminProducts = () => {
                     <option value="new">New</option>
                     <option value="popular">Popular</option>
                     <option value="special">Special</option>
-                    <option value="none">None</option>
+                    <option value="">None</option>
                   </select>
                 </div>
 

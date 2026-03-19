@@ -203,13 +203,11 @@ export const updateProduct = async (req, res) => {
     product.name = updatedData.name ?? product.name;
     product.description = updatedData.description ?? product.description;
     product.price = updatedData.price ?? product.price;
+    product.category = updatedData.category ?? product.category;
     product.stock = updatedData.stock ?? product.stock;
     product.material = updatedData.material ?? product.material;
     product.color = updatedData.color ?? product.color;
-
-    if (updatedData.tag !== undefined) {
-      product.tag = updatedData.tag === "none" ? "" : updatedData.tag;
-    }
+    product.tag = updatedData.tag ?? product.tag;
 
     if (updatedData.dimensions) {
       try {
