@@ -302,12 +302,6 @@ const Products = () => {
                           </span>
                         )}
 
-                        {product.discount > 0 && (
-                          <span className="absolute bottom-2 left-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">
-                            ₹{product.discount} OFF
-                          </span>
-                        )}
-
                       </div>
 
                       {/* CONTENT */}
