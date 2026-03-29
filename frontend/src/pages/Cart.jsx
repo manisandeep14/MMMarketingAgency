@@ -229,7 +229,7 @@ const Cart = () => {
 
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span className="text-green-600 font-medium">FREE 🚚</span>
+                    <span className="text-green-600 font-medium">Based On Distance 🚚</span>
                   </div>
 
                   <div className="flex justify-between">
@@ -245,7 +245,7 @@ const Cart = () => {
                   </div>
 
                   <p className="text-green-600 text-sm">
-                    💡 You saved ₹{calculateDiscount().toLocaleString()} today!
+                    You saved ₹{calculateDiscount().toLocaleString()} today!
                   </p>
                 </div>
 

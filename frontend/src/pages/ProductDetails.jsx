@@ -277,8 +277,38 @@ const ProductDetails = () => {
             </h1>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-sky-600">
-                ₹{product.price.toLocaleString()}
+              <div className="flex flex-col gap-1">
+                {/* Price Row */}
+                <div className="flex items-center gap-3">
+
+                  {/* Final Price */}
+                  <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-sky-600">
+                    ₹{(product.price - (product.discount || 0)).toLocaleString()}
+                  </div>
+
+                  {/* Original Price */}
+                  {product.discount > 0 && (
+                    <div className="text-lg text-gray-400 line-through">
+                      ₹{product.price.toLocaleString()}
+                    </div>
+                  )}
+
+                </div>
+
+                {/* Savings */}
+                {product.discount > 0 && (
+                  <p className="text-green-600 font-medium">
+                    You save ₹{product.discount.toLocaleString()}
+                  </p>
+                )}
+
+                {/* Assembly */}
+                {product.assemblyCharge > 0 && (
+                  <p className="text-sm text-slate-600">
+                    🛠 Assembly Charges: ₹{product.assemblyCharge.toLocaleString()}
+                  </p>
+                )}
+
               </div>
               <div className="px-3 py-1 bg-sky-50 text-sky-600 rounded-full text-xs sm:text-sm w-fit">
                 {product.category}

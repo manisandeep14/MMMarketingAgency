@@ -302,6 +302,12 @@ const Products = () => {
                           </span>
                         )}
 
+                        {product.discount > 0 && (
+                          <span className="absolute bottom-2 left-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">
+                            ₹{product.discount} OFF
+                          </span>
+                        )}
+
                       </div>
 
                       {/* CONTENT */}
@@ -315,14 +321,22 @@ const Products = () => {
 
                       <div className="flex justify-between mt-2 items-center">
 
-                        <span className="text-sky-600 font-bold text-sm">
-                          ₹{product.price.toLocaleString()}
-                        </span>
+                        {/* Price Section */}
+                        <div className="flex flex-col">
+                          <span className="text-sky-600 font-bold text-sm">
+                            ₹{(product.price - (product.discount || 0)).toLocaleString()}
+                          </span>
 
+                          {product.discount > 0 && (
+                            <span className="text-xs text-gray-400 line-through">
+                              ₹{product.price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Stock */}
                         <span className="text-xs text-gray-500">
-                          {product.stock > 0
-                            ? "In stock"
-                            : "Out of stock"}
+                          {product.stock > 0 ? "In stock" : "Out of stock"}
                         </span>
 
                       </div>

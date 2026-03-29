@@ -334,7 +334,7 @@ const AdminProducts = () => {
                   <h3 className="font-semibold text-lg mb-2 line-clamp-1">{product.name}</h3>
 
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-primary-600 font-bold text-xl">₹₹{(product.price - (product.discount || 0)).toLocaleString()}</span>
+                    <span className="text-primary-600 font-bold text-xl">₹{(product.price - (product.discount || 0)).toLocaleString()}</span>
                     {product.discount > 0 && (
                       <span className="text-sm text-gray-400 line-through ml-2">
                         ₹{product.price.toLocaleString()}
