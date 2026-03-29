@@ -25,6 +25,16 @@ const productSchema = new mongoose.Schema(
       required: [true, 'Please enter product price'],
       min: 0,
     },
+    discount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    assemblyCharge: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     category: {
       type: String,
       required: [true, 'Please select product category'],

@@ -203,6 +203,8 @@ export const updateProduct = async (req, res) => {
     product.name = updatedData.name ?? product.name;
     product.description = updatedData.description ?? product.description;
     product.price = updatedData.price ?? product.price;
+    product.discount = updatedData.discount ?? product.discount;
+    product.assemblyCharge = updatedData.assemblyCharge ?? product.assemblyCharge;
     product.category = updatedData.category ?? product.category;
     product.stock = updatedData.stock ?? product.stock;
     product.material = updatedData.material ?? product.material;

@@ -33,6 +33,8 @@ const AdminProducts = () => {
     name: "",
     description: "",
     price: "",
+    discount: "",      
+    assemblyCharge: "",  
     category: "Sofa",
     stock: "",
     material: "Wood",
@@ -114,6 +116,8 @@ const AdminProducts = () => {
       name: "",
       description: "",
       price: "",
+      discount: "",      
+      assemblyCharge: "",  
       category: "Sofa",
       stock: "",
       material: "Wood",
@@ -121,7 +125,7 @@ const AdminProducts = () => {
       length: "",
       width: "",
       height: "",
-      tag: "new",          // ✅ DEFAULT NEW
+      tag: "new",       
       isActive: true,
     });
 
@@ -141,6 +145,8 @@ const AdminProducts = () => {
       name: product.name || "",
       description: product.description || "",
       price: product.price || "",
+      discount: product.discount || 0,           
+      assemblyCharge: product.assemblyCharge || 0,
       category: product.category || "Sofa",
       stock: product.stock ?? "",
       material: product.material || "Wood",
@@ -328,7 +334,12 @@ const AdminProducts = () => {
                   <h3 className="font-semibold text-lg mb-2 line-clamp-1">{product.name}</h3>
 
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-primary-600 font-bold text-xl">₹{product.price?.toLocaleString?.() ?? product.price}</span>
+                    <span className="text-primary-600 font-bold text-xl">₹₹{(product.price - (product.discount || 0)).toLocaleString()}</span>
+                    {product.discount > 0 && (
+                      <span className="text-sm text-gray-400 line-through ml-2">
+                        ₹{product.price.toLocaleString()}
+                      </span>
+                    )}
                     <span className="text-sm text-gray-500">{product.category}</span>
                   </div>
 
@@ -366,8 +377,49 @@ const AdminProducts = () => {
               <textarea className="input-field" rows="3" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Description" />
 
               <div className="grid grid-cols-2 gap-4">
-                <input type="number" className="input-field" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} placeholder="Price" required />
-                <input type="number" className="input-field" value={formData.stock} onChange={(e) => setFormData({ ...formData, stock: e.target.value })} placeholder="Stock" required />
+                <input
+                  type="number"
+                  className="input-field"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="Price"
+                  required
+                />
+
+                <input
+                  type="number"
+                  className="input-field"
+                  value={formData.discount}
+                  onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
+                  placeholder="Discount (₹)"
+                />
+              </div>
+              {formData.price && formData.discount && (
+                <p className="text-green-600 font-medium">
+                  Final Price: ₹
+                  {(Number(formData.price) - Number(formData.discount)).toLocaleString()}
+                </p>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  type="number"
+                  className="input-field"
+                  value={formData.stock}
+                  onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                  placeholder="Stock"
+                  required
+                />
+
+                <input
+                  type="number"
+                  className="input-field"
+                  value={formData.assemblyCharge}
+                  onChange={(e) =>
+                    setFormData({ ...formData, assemblyCharge: e.target.value })
+                  }
+                  placeholder="Assembly Charges (₹)"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

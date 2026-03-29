@@ -46,13 +46,38 @@ const Cart = () => {
     }
   };
 
-  const calculateTotal = () => {
+  const calculateSubtotal = () => {
     return (
       cart.items?.reduce((total, item) => {
         return total + (item.product?.price || 0) * item.quantity;
       }, 0) || 0
     );
   };
+
+  const calculateDiscount = () => {
+    return (
+      cart.items?.reduce((total, item) => {
+        return total + (item.product?.discount || 0) * item.quantity;
+      }, 0) || 0
+    );
+  };
+
+  const calculateAssembly = () => {
+    return (
+      cart.items?.reduce((total, item) => {
+        return total + (item.product?.assemblyCharge || 0) * item.quantity;
+      }, 0) || 0
+    );
+  };
+
+  const calculateFinalTotal = () => {
+    return (
+      calculateSubtotal() -
+      calculateDiscount() +
+      calculateAssembly()
+    );
+  };
+
 
   if (loading) {
     return (
@@ -135,8 +160,15 @@ const Cart = () => {
                         </p>
                       )}
                       <p className="text-sky-600 font-bold mt-2 text-base sm:text-lg">
-                        ₹{item.product.price.toLocaleString()}
+                        ₹{(
+                          item.product.price - (item.product.discount || 0)
+                        ).toLocaleString()}
                       </p>
+                      {item.product.discount > 0 && (
+                        <p className="text-sm text-gray-400 line-through">
+                          ₹{item.product.price.toLocaleString()}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-4">
@@ -184,20 +216,37 @@ const Cart = () => {
                 </h2>
 
                 <div className="space-y-3 mb-6 text-sm sm:text-base text-slate-700">
+  
                   <div className="flex justify-between">
-                    <span>Subtotal</span>
-                    <span>₹{calculateTotal().toLocaleString()}</span>
+                    <span>Subtotal ({cart.items.length} items)</span>
+                    <span>₹{calculateSubtotal().toLocaleString()}</span>
                   </div>
+
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount Applied</span>
+                    <span>-₹{calculateDiscount().toLocaleString()}</span>
+                  </div>
+
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span className="text-green-600 font-medium">FREE</span>
+                    <span className="text-green-600 font-medium">FREE 🚚</span>
                   </div>
+
+                  <div className="flex justify-between">
+                    <span>Assembly Charges</span>
+                    <span>₹{calculateAssembly().toLocaleString()}</span>
+                  </div>
+
                   <div className="border-t pt-4 flex justify-between font-bold text-base sm:text-lg">
                     <span>Total</span>
                     <span className="text-sky-600">
-                      ₹{calculateTotal().toLocaleString()}
+                      ₹{calculateFinalTotal().toLocaleString()}
                     </span>
                   </div>
+
+                  <p className="text-green-600 text-sm">
+                    💡 You saved ₹{calculateDiscount().toLocaleString()} today!
+                  </p>
                 </div>
 
                 <button
