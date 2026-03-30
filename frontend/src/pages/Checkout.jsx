@@ -565,12 +565,10 @@ const Checkout = () => {
                   <span>₹{calculateTotal().toLocaleString()}</span>
                 </div>
 
-                {calculateDiscount() > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount</span>
-                    <span>-₹{calculateDiscount().toLocaleString()}</span>
-                  </div>
-                )}
+                <div className="flex justify-between text-green-600">
+                  <span>Discount</span>
+                  <span>-₹{calculateDiscount().toLocaleString()}</span>
+                </div>
 
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -586,12 +584,10 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {calculateAssembly() > 0 && (
-                  <div className="flex justify-between">
-                    <span>Assembly Charges</span>
-                    <span>₹{calculateAssembly().toLocaleString()}</span>
-                  </div>
-                )}
+                <div className="flex justify-between">
+                  <span>Assembly Charges</span>
+                  <span>₹{calculateAssembly().toLocaleString()}</span>
+                </div>
 
                 <div className="border-t pt-4 flex justify-between font-bold text-base sm:text-lg">
                   <span>Total</span>
@@ -605,11 +601,9 @@ const Checkout = () => {
                   </span>
                 </div>
 
-                {calculateDiscount() > 0 && (
-                  <p className="text-green-600 text-sm">
-                    You saved ₹{calculateDiscount().toLocaleString()} today!
-                  </p>
-                )}
+                <p className="text-green-600 text-sm">
+                  You saved ₹{calculateDiscount().toLocaleString()} today!
+                </p>
 
               </div>
 
