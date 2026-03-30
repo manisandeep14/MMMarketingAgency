@@ -213,10 +213,17 @@ const OrderDetails = () => {
               </h2>
 
               <div className="space-y-3 mb-4 text-sm sm:text-base">
+
                 <div className="flex justify-between">
                   <span>Items ({order.orderItems.length})</span>
                   <span>₹{order.itemsPrice.toLocaleString()}</span>
                 </div>
+
+                <div className="flex justify-between text-green-600">
+                  <span>Discount</span>
+                  <span>-₹{order.discountPrice.toLocaleString()}</span>
+                </div>
+
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span>
@@ -225,12 +232,23 @@ const OrderDetails = () => {
                       : `₹${order.shippingPrice.toLocaleString()}`}
                   </span>
                 </div>
+
+                <div className="flex justify-between">
+                  <span>Assembly Charges</span>
+                  <span>₹{order.assemblyPrice.toLocaleString()}</span>
+                </div>
+
                 <div className="border-t pt-3 flex justify-between font-bold text-base sm:text-lg">
                   <span>Total</span>
                   <span className="text-sky-600">
                     ₹{order.totalPrice.toLocaleString()}
                   </span>
                 </div>
+
+                <p className="text-green-600 text-sm">
+                  You saved ₹{order.discountPrice.toLocaleString()}!
+                </p>
+
               </div>
 
               <div className="border-t pt-4">

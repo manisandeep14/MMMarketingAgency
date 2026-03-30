@@ -69,6 +69,26 @@ const Checkout = () => {
     );
   };
 
+  const calculateDiscount = () => {
+    return (
+      cart.items?.reduce(
+        (total, item) =>
+          total + ((item.product?.discount || 0) * item.quantity),
+        0
+      ) || 0
+    );
+  };
+
+  const calculateAssembly = () => {
+    return (
+      cart.items?.reduce(
+        (total, item) =>
+          total + ((item.product?.assemblyCharge || 0) * item.quantity),
+        0
+      ) || 0
+    );
+  };
+
   const fetchDeliveryPrice = async () => {
 
     if (!location) return;
@@ -153,7 +173,12 @@ const Checkout = () => {
     setProcessing(true);
 
     try {
-      const total = calculateTotal() + deliveryPrice;
+      const itemsPrice = calculateTotal();
+      const discountPrice = calculateDiscount();
+      const assemblyPrice = calculateAssembly();
+
+      const total =
+        itemsPrice - discountPrice + assemblyPrice + deliveryPrice;
 
       const razorpayResponse = await api.post(
         "/orders/razorpay/create",
@@ -206,8 +231,10 @@ const Checkout = () => {
                 status: "Completed",
               },
               itemsPrice: itemsPrice,
+              discountPrice,
+              assemblyPrice,
               shippingPrice: deliveryPrice,
-              totalPrice: itemsPrice + deliveryPrice,
+              totalPrice: total,
             };
 
             const orderResponse = await api.post("/orders", orderData);
@@ -532,19 +559,25 @@ const Checkout = () => {
               </h2>
 
               <div className="space-y-3 mb-6 text-sm sm:text-base">
+
                 <div className="flex justify-between">
                   <span>Subtotal ({validItems.length})</span>
-                  <span>
-                    ₹{calculateTotal().toLocaleString()}
-                  </span>
+                  <span>₹{calculateTotal().toLocaleString()}</span>
                 </div>
+
+                {calculateDiscount() > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount</span>
+                    <span>-₹{calculateDiscount().toLocaleString()}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <div className="text-right">
                     <div className="text-green-600 font-medium">
                       {location ? `₹${deliveryPrice}` : "Select location"}
                     </div>
-
                     {deliveryDistance && (
                       <div className="text-xs text-slate-500">
                         {deliveryDistance} km from store
@@ -552,12 +585,32 @@ const Checkout = () => {
                     )}
                   </div>
                 </div>
-                <div className="border-t pt-4 flex justify-between font-bold">
+
+                {calculateAssembly() > 0 && (
+                  <div className="flex justify-between">
+                    <span>Assembly Charges</span>
+                    <span>₹{calculateAssembly().toLocaleString()}</span>
+                  </div>
+                )}
+
+                <div className="border-t pt-4 flex justify-between font-bold text-base sm:text-lg">
                   <span>Total</span>
                   <span className="text-sky-600">
-                    ₹{(calculateTotal() + deliveryPrice).toLocaleString()}
+                    ₹{(
+                      calculateTotal() -
+                      calculateDiscount() +
+                      calculateAssembly() +
+                      deliveryPrice
+                    ).toLocaleString()}
                   </span>
                 </div>
+
+                {calculateDiscount() > 0 && (
+                  <p className="text-green-600 text-sm">
+                    You saved ₹{calculateDiscount().toLocaleString()} today!
+                  </p>
+                )}
+
               </div>
 
               <button

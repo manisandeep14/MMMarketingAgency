@@ -48,6 +48,14 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
       default: 0,
+    },discountPrice: {
+      type: Number,
+      default: 0,
+    },
+
+    assemblyPrice: {
+      type: Number,
+      default: 0,
     },
     shippingPrice: {
       type: Number,
