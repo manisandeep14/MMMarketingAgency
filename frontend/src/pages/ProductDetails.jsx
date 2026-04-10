@@ -272,9 +272,19 @@ const ProductDetails = () => {
 
           {/* RIGHT SECTION */}
           <div className="bg-white rounded-2xl p-4 sm:p-8 shadow-md border border-sky-100">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3 text-slate-900">
-              {product.name}
-            </h1>
+            <div className="flex items-center gap-3 mb-2 sm:mb-3 flex-wrap">
+
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900">
+                {product.name}
+              </h1>
+
+              {product.discount > 0 && product.price > 0 && (
+                <span className="text-xs sm:text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
+                  {Math.round((product.discount / product.price) * 100)}% OFF
+                </span>
+              )}
+
+            </div>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="flex flex-col gap-1">

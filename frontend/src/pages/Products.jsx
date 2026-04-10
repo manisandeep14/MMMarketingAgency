@@ -329,14 +329,9 @@ const Products = () => {
                           </span>
 
                           {product.discount > 0 && (
-                            <>
-                              <span className="text-xs text-gray-400 line-through">
-                                ₹{product.price.toLocaleString()}
-                              </span>
-                              <span className="text-green-600 text-xs font-semibold">
-                                {Math.round((product.discount / product.price) * 100)}% OFF
-                              </span>
-                            </>
+                            <span className="text-xs text-gray-400 line-through">
+                              ₹{product.price.toLocaleString()}
+                            </span>
                           )}
                         </div>
 
