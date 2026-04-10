@@ -302,6 +302,13 @@ const Products = () => {
                           </span>
                         )}
 
+                        {product.discount > 0 && (
+                          <span className="absolute bottom-2 left-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full font-semibold">
+                            {Math.round((product.discount / product.price) * 100)}% OFF
+                          </span>
+                        )}
+
+
                       </div>
 
                       {/* CONTENT */}
@@ -322,9 +329,14 @@ const Products = () => {
                           </span>
 
                           {product.discount > 0 && (
-                            <span className="text-xs text-gray-400 line-through">
-                              ₹{product.price.toLocaleString()}
-                            </span>
+                            <>
+                              <span className="text-xs text-gray-400 line-through">
+                                ₹{product.price.toLocaleString()}
+                              </span>
+                              <span className="text-green-600 text-xs font-semibold">
+                                {Math.round((product.discount / product.price) * 100)}% OFF
+                              </span>
+                            </>
                           )}
                         </div>
 
