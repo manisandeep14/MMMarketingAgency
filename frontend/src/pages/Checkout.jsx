@@ -251,6 +251,12 @@ const Checkout = () => {
             setProcessing(false);
           }
         },
+        modal: {
+          ondismiss: function () {
+            toast.error("Payment cancelled");
+            setProcessing(false);
+          },
+        },
         prefill: {
           name: user?.name || "",
           email: user?.email || "",
