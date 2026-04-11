@@ -163,13 +163,7 @@ const Cart = () => {
                         )}
 
                       </div>
-                       {item.product.discount > 0 && item.product.price > 0 && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
-                            {Math.round(
-                              (item.product.discount / item.product.price) * 100
-                            )}% OFF
-                          </span>
-                        )}
+                       
                       <p className="text-slate-500 text-xs sm:text-sm mt-1">
                         {item.product.category}
                       </p>
