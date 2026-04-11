@@ -499,9 +499,21 @@ const Checkout = () => {
 
                         {/* LEFT SIDE */}
                         <div className="flex-1">
-                          <h3 className="font-semibold text-sm sm:text-base">
-                            {item.product.name}
-                          </h3>
+                          <div className="flex items-center gap-2 flex-wrap">
+
+                            <h3 className="font-semibold text-sm sm:text-base">
+                              {item.product.name}
+                            </h3>
+
+                            {item.product.discount > 0 && item.product.price > 0 && (
+                              <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                                {Math.round(
+                                  (item.product.discount / item.product.price) * 100
+                                )}% OFF
+                              </span>
+                            )}
+
+                          </div>
 
                           {item.product.description && (
                             <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-lg">
@@ -540,7 +552,10 @@ const Checkout = () => {
                           </div>
 
                           <p className="text-sky-600 font-bold text-sm sm:text-base">
-                            ₹{(item.product.price * item.quantity).toLocaleString()}
+                            ₹{(
+                              (item.product.price - (item.product.discount || 0)) *
+                              item.quantity
+                            ).toLocaleString()}
                           </p>
                         </div>
 
