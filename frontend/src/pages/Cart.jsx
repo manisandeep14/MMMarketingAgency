@@ -145,12 +145,31 @@ const Cart = () => {
                     </Link>
 
                     <div className="flex-1">
-                      <Link
-                        to={`/products/${item.product._id}`}
-                        className="font-semibold text-base sm:text-lg text-slate-800 hover:text-sky-600 transition"
-                      >
-                        {item.product.name}
-                      </Link>
+                      <div className="flex items-center gap-2 flex-wrap">
+
+                        <Link
+                          to={`/products/${item.product._id}`}
+                          className="font-semibold text-base sm:text-lg text-slate-800 hover:text-sky-600 transition"
+                        >
+                          {item.product.name}
+                        </Link>
+
+                        {item.product.discount > 0 && item.product.price > 0 && (
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                            {Math.round(
+                              (item.product.discount / item.product.price) * 100
+                            )}% OFF
+                          </span>
+                        )}
+
+                      </div>
+                       {item.product.discount > 0 && item.product.price > 0 && (
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                            {Math.round(
+                              (item.product.discount / item.product.price) * 100
+                            )}% OFF
+                          </span>
+                        )}
                       <p className="text-slate-500 text-xs sm:text-sm mt-1">
                         {item.product.category}
                       </p>
