@@ -71,7 +71,9 @@ const Products = () => {
 
       if (filters.search) params.append("search", filters.search);
 
-      if (filters.tag) params.append("tag", filters.tag);
+      if (filters.tag !== "") {
+        params.append("tag", filters.tag);
+      }
 
       if (filters.minPrice) params.append("minPrice", filters.minPrice);
 
@@ -284,7 +286,7 @@ const Products = () => {
                           </div>
                         )}
 
-                        {product.showNew && (
+                        {product.tag === "new" && (
                           <span className="absolute top-2 right-2 text-xs bg-red-500 text-white px-2 py-1 rounded-full">
                             NEW
                           </span>

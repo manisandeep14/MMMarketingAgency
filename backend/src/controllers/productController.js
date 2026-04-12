@@ -10,12 +10,15 @@ import Cart from '../models/Cart.js';
 -------------------------------------------- */
 export const getAllProducts = async (req, res) => {
   try {
-    const { category, search, minPrice, maxPrice, sort } = req.query;
+    const { category, search, minPrice, maxPrice, sort, tag } = req.query;
 
     let query = { isActive: true };
 
     if (category && category !== "All") {
       query.category = category;
+    }
+    if (tag && tag !== "") {
+      query.tag = tag;
     }
 
     if (search) {
