@@ -394,10 +394,10 @@ const AdminProducts = () => {
                   placeholder="Discount (₹)"
                 />
               </div>
-              {formData.price && formData.discount && (
+              {formData.price && (
                 <p className="text-green-600 font-medium">
                   Final Price: ₹
-                  {(Number(formData.price) - Number(formData.discount)).toLocaleString()}
+                  {(Number(formData.price) - Number(formData.discount || 0)).toLocaleString()}
                 </p>
               )}
 
