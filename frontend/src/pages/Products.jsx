@@ -286,24 +286,31 @@ const Products = () => {
                           </div>
                         )}
 
-                        {product.tag === "new" && (
-                          <span className="absolute top-2 right-2 text-xs bg-red-500 text-white px-2 py-1 rounded-full">
-                            NEW
-                          </span>
-                        )}
+                        {/* TAG BADGE */}
+                        {product.tag && (
+                          <div className="absolute -top-3 -right-3 z-10">
 
-                        {product.tag === "popular" && (
-                          <span className="absolute top-2 right-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">
-                            POPULAR
-                          </span>
-                        )}
+                            <span
+                              className={`
+                                px-3 py-1 text-[10px] sm:text-xs font-bold text-white 
+                                rounded-full shadow-lg border-2 border-white
+                                tracking-wide
+                                ${
+                                  product.tag === "new"
+                                    ? "bg-gradient-to-r from-red-500 to-pink-500"
+                                    : product.tag === "popular"
+                                    ? "bg-gradient-to-r from-yellow-400 to-orange-500"
+                                    : product.tag === "special"
+                                    ? "bg-gradient-to-r from-purple-500 to-indigo-600"
+                                    : "bg-gray-400"
+                                }
+                              `}
+                            >
+                              {product.tag.toUpperCase()}
+                            </span>
 
-                        {product.tag === "special" && (
-                          <span className="absolute top-2 right-2 text-xs bg-purple-500 text-white px-2 py-1 rounded-full">
-                            SPECIAL
-                          </span>
+                          </div>
                         )}
-
                         {product.discount > 0 && (
                           <span className="absolute bottom-2 left-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full font-semibold">
                             {Math.round((product.discount / product.price) * 100)}% OFF
