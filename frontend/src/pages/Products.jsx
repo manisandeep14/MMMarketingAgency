@@ -272,28 +272,31 @@ const Products = () => {
                     >
 
                       {/* IMAGE */}
-                      <div className="relative aspect-[4/3] mb-2 rounded-lg overflow-hidden">
+                      <div className="relative aspect-[4/3] mb-2 rounded-lg">
 
-                        {img ? (
-                          <img
-                            src={img}
-                            alt={product.name}
-                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                          />
-                        ) : (
-                          <div className="h-full flex items-center justify-center text-gray-400 text-sm">
-                            No Image
-                          </div>
-                        )}
+                        {/* IMAGE WRAPPER (this keeps rounded corners) */}
+                        <div className="w-full h-full overflow-hidden rounded-lg">
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={product.name}
+                              className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+                              No Image
+                            </div>
+                          )}
+                        </div>
 
-                        {/* TAG BADGE */}
+                        {/* TAG BADGE  */}
                         {product.tag && (
-                          <div className="absolute -top-3 -right-3 z-10">
+                          <div className="absolute -top-4 -right-4 z-20">
 
                             <span
                               className={`
                                 px-3 py-1 text-[10px] sm:text-xs font-bold text-white 
-                                rounded-full shadow-lg border-2 border-white
+                                rounded-full shadow-xl border-2 border-white
                                 tracking-wide
                                 ${
                                   product.tag === "new"
@@ -311,12 +314,6 @@ const Products = () => {
 
                           </div>
                         )}
-                        {product.discount > 0 && (
-                          <span className="absolute bottom-2 left-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full font-semibold">
-                            {Math.round((product.discount / product.price) * 100)}% OFF
-                          </span>
-                        )}
-
 
                       </div>
 
