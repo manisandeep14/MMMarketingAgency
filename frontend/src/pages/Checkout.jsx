@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import api from "../utils/api";
@@ -8,8 +8,11 @@ import MapPicker from "./MapPicker";
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const checkoutLocation = useLocation();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const buyNowProduct = checkoutLocation.state?.product;
+  const isBuyNow = checkoutLocation.state?.buyNow;
 
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(true);
@@ -61,7 +64,7 @@ const Checkout = () => {
 
   const calculateTotal = () => {
     return (
-      cart.items?.reduce(
+      validItems?.reduce(
         (total, item) =>
           total + (item.product?.price || 0) * item.quantity,
         0
@@ -71,7 +74,7 @@ const Checkout = () => {
 
   const calculateDiscount = () => {
     return (
-      cart.items?.reduce(
+      validItems?.reduce(
         (total, item) =>
           total + ((item.product?.discount || 0) * item.quantity),
         0
@@ -81,7 +84,7 @@ const Checkout = () => {
 
   const calculateAssembly = () => {
     return (
-      cart.items?.reduce(
+      validItems?.reduce(
         (total, item) =>
           total + ((item.product?.assemblyCharge || 0) * item.quantity),
         0
@@ -120,7 +123,14 @@ const Checkout = () => {
     }
   };
 
-  const validItems = cart.items?.filter((item) => item.product) || [];
+  const validItems = isBuyNow
+    ? [
+        {
+          product: buyNowProduct,
+          quantity: buyNowProduct.quantity,
+        },
+      ]
+    : cart.items?.filter((item) => item.product) || [];
 
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
@@ -164,7 +174,7 @@ const Checkout = () => {
       return;
     }
 
-    if (cart.items.length === 0) {
+    if (validItems.length === 0) {
       toast.error("Your cart is empty");
       navigate("/cart");
       return;

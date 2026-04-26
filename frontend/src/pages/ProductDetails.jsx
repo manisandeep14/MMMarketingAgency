@@ -130,11 +130,15 @@ const ProductDetails = () => {
 
   const handleBuyNow = async () => {
     try {
-      await api.post("/cart", {
-        productId: product._id,
-        quantity,
+      navigate("/checkout", {
+        state: {
+          buyNow: true,
+          product: {
+            ...product,
+            quantity,
+          },
+        },
       });
-      navigate("/checkout");
     } catch (error) {
       toast.error("Failed to proceed to checkout");
     }

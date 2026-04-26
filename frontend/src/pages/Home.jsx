@@ -85,7 +85,7 @@ export default function Home() {
       </section>
 
       {/* ================================================= */}
-      {/* SHOP BY ROOM */}
+      {/* SHOP BY CATEGORIES */}
       {/* ================================================= */}
       <motion.section
         initial={{ opacity: 0, y: 60 }}
@@ -94,7 +94,7 @@ export default function Home() {
         className="max-w-6xl mx-auto px-4 py-16"
       >
         <h2 className="text-3xl font-bold text-center mb-10">
-          Shop By Room
+          Shop By Categories
         </h2>
 
         <Swiper
