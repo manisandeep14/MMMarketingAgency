@@ -21,7 +21,8 @@ const normalizeImages = (images) => {
 const categories = [
   "All",
   "Sofa",
-  "Bed",
+  "Beds - Storage",
+  "Beds - Non Storage",
   "Chair",
   "Table",
   "Cabinet",

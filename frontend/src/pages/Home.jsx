@@ -26,7 +26,16 @@ export default function Home() {
 
   const categories = [
     { id: "Sofa", title: "Sofa", img: "/categories/sofa.jpg" },
-    { id: "Bed", title: "Bed", img: "/categories/bed.png" },
+    {
+      id: "Beds - Storage",
+      title: "Storage Beds",
+      img: "/categories/storage-bed.png",
+    },
+    {
+      id: "Beds - Non Storage",
+      title: "Non Storage Beds",
+      img: "/categories/non-storage-bed.jpeg",
+    },
     { id: "Chair", title: "Chair", img: "/categories/chair.jpg" },
     { id: "Table", title: "Table", img: "/categories/table.webp" },
   ];

@@ -95,7 +95,7 @@ const AdminProducts = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = ["All","Sofa", "Bed", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
+  const categories = ["All","Sofa", "Beds - Storage","Beds - Non Storage", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
   const tagOptions = [
     { label: "All", value: "" },
     { label: "New", value: "new" },
