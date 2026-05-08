@@ -24,6 +24,16 @@ const normalizeImages = (images) => {
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [filters, setFilters] = useState({
+    category: "All",
+    search: "",
+    tag: "",
+    minPrice: "",
+    maxPrice: "",
+    sort: "newest",
+  });
 
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -85,27 +95,59 @@ const AdminProducts = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = ["Sofa", "Bed", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
+  const categories = ["All","Sofa", "Bed", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
+  const tagOptions = [
+    { label: "All", value: "" },
+    { label: "New", value: "new" },
+    { label: "Popular", value: "popular" },
+    { label: "Special", value: "special" },
+  ];
 
   useEffect(() => {
-    fetchProducts();
-    return () => {
-      // cleanup previews on unmount
-      imagePreviews.forEach((url) => URL.revokeObjectURL(url));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const timer = setTimeout(fetchProducts, 400);
+
+    return () => clearTimeout(timer);
+  }, [filters]);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/products");
+
+      const params = new URLSearchParams();
+
+      if (filters.category !== "All")
+        params.append("category", filters.category);
+
+      if (filters.search)
+        params.append("search", filters.search);
+
+      if (filters.tag)
+        params.append("tag", filters.tag);
+
+      if (filters.minPrice)
+        params.append("minPrice", filters.minPrice);
+
+      if (filters.maxPrice)
+        params.append("maxPrice", filters.maxPrice);
+
+      if (filters.sort)
+        params.append("sort", filters.sort);
+
+      const res = await api.get(`/products?${params.toString()}`);
+
       setProducts(res.data.products || []);
     } catch (err) {
       toast.error("Failed to load products");
     } finally {
       setLoading(false);
     }
+  };
+
+  const updateFilter = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const openCreateModal = () => {
@@ -295,15 +337,99 @@ const AdminProducts = () => {
       {/* HEADER */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Manage Products</h1>
-        <div className="flex gap-4">
-          <button onClick={openCreateModal} className="btn-primary flex items-center gap-2">
+        <div className="flex gap-3 items-center">
+
+          {/* SEARCH */}
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={filters.search}
+            onChange={(e) => updateFilter("search", e.target.value)}
+            className="px-4 py-2 border rounded-lg"
+          />
+
+          {/* FILTER BUTTON */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="btn-secondary"
+          >
+            {showFilters ? "Close Filters" : "Filters"}
+          </button>
+
+          <button
+            onClick={openCreateModal}
+            className="btn-primary flex items-center gap-2"
+          >
             <FaPlus /> Add Product
           </button>
-          <Link to="/admin" className="btn-secondary">Back to Dashboard</Link>
+
+          <Link to="/admin" className="btn-secondary">
+            Back to Dashboard
+          </Link>
         </div>
       </div>
 
       {/* PRODUCT LIST */}
+      {showFilters && (
+        <div className="mb-6 bg-white border rounded-lg p-4 space-y-4">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            {/* Category */}
+            <select
+              className="input-field"
+              value={filters.category}
+              onChange={(e) =>
+                updateFilter("category", e.target.value)
+              }
+            >
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            {/* Tag */}
+            <select
+              className="input-field"
+              value={filters.tag}
+              onChange={(e) =>
+                updateFilter("tag", e.target.value)
+              }
+            >
+              {tagOptions.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Min Price */}
+            <input
+              type="number"
+              placeholder="Min Price"
+              className="input-field"
+              value={filters.minPrice}
+              onChange={(e) =>
+                updateFilter("minPrice", e.target.value)
+              }
+            />
+
+            {/* Max Price */}
+            <input
+              type="number"
+              placeholder="Max Price"
+              className="input-field"
+              value={filters.maxPrice}
+              onChange={(e) =>
+                updateFilter("maxPrice", e.target.value)
+              }
+            />
+
+          </div>
+        </div>
+      )}
       {loading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto" />
@@ -315,6 +441,7 @@ const AdminProducts = () => {
           <button onClick={openCreateModal} className="btn-primary mt-4">Add Your First Product</button>
         </div>
       ) : (
+        
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
           {products.map((product) => {
             const imgs = normalizeImages(product.images);
