@@ -95,7 +95,30 @@ const AdminProducts = () => {
 
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = ["All","Sofa", "Beds - Storage","Beds - Non Storage", "Chair", "Table", "Cabinet", "Wardrobe", "Decor", "Other"];
+  const filterCategories = [
+    "All",
+    "Sofa",
+    "Beds - Storage",
+    "Beds - Non Storage",
+    "Chair",
+    "Table",
+    "Cabinet",
+    "Wardrobe",
+    "Decor",
+    "Other",
+  ];
+
+  const productCategories = [
+    "Sofa",
+    "Beds - Storage",
+    "Beds - Non Storage",
+    "Chair",
+    "Table",
+    "Cabinet",
+    "Wardrobe",
+    "Decor",
+    "Other",
+  ];
   const tagOptions = [
     { label: "All", value: "" },
     { label: "New", value: "new" },
@@ -383,7 +406,7 @@ const AdminProducts = () => {
                 updateFilter("category", e.target.value)
               }
             >
-              {categories.map((c) => (
+              {filterCategories.map((c) => (
                 <option key={c} value={c}>
                   {c}
                 </option>
@@ -551,7 +574,7 @@ const AdminProducts = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <select className="input-field" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
-                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                  {productCategories.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
 
                 <input type="text" className="input-field" value={formData.material} onChange={(e) => setFormData({ ...formData, material: e.target.value })} placeholder="Material" />
