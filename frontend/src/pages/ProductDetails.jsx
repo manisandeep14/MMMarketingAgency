@@ -137,7 +137,7 @@ const ProductDetails = () => {
             ...product,
             quantity,
           },
-        },
+        },  
       });
     } catch (error) {
       toast.error("Failed to proceed to checkout");
@@ -168,7 +168,7 @@ const ProductDetails = () => {
     }
   };
 
-  if (loading || !product) {
+  if (!product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
         <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-sky-500 mx-auto"></div>
