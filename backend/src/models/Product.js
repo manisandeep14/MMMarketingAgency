@@ -37,8 +37,17 @@ const productSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: [true, 'Please select product category'],
-      enum: ['Sofa', 'Bed', 'Chair', 'Table', 'Cabinet', 'Wardrobe', 'Decor', 'Other'],
+      enum: [
+        "Sofa",
+        "Beds - Storage",
+        "Beds - Non Storage",
+        "Chair",
+        "Table",
+        "Cabinet",
+        "Wardrobe",
+        "Decor",
+        "Other"
+      ]
     },tag: {
       type: String,
       enum: ["new", "popular", "special", null],
