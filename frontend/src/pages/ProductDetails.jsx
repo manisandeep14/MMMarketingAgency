@@ -207,7 +207,7 @@ const ProductDetails = () => {
         {/* Back button */}
         <div className="mb-4 sm:mb-6">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/products")}
             className="inline-flex items-center gap-2 px-3 py-2 text-sm sm:text-base rounded-lg bg-white border border-sky-100 shadow-sm hover:shadow-md"
           >
             <FaArrowLeft />
