@@ -36,6 +36,15 @@ export default function Home() {
       title: "Non Storage Beds",
       img: "/categories/non-storage-bed.jpeg",
     },
+    {
+      id: "Beds - Single Cot",
+      title: "Single Cot Beds",
+      img: "/categories/single-cot-bed.png",
+    },{
+      id: "Diwan Cot",
+      title: "Diwan Cot",
+      img: "/categories/diwan-cot.png",
+    },
     { id: "Chair", title: "Chair", img: "/categories/chair.jpg" },
     { id: "Table", title: "Table", img: "/categories/table.webp" },
   ];
