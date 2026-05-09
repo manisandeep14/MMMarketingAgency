@@ -41,6 +41,8 @@ const productSchema = new mongoose.Schema(
         "Sofa",
         "Beds - Storage",
         "Beds - Non Storage",
+        "Beds - Single Cot",
+        "Diwan Cot",
         "Chair",
         "Table",
         "Cabinet",
