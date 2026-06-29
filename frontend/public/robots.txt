@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mm-marketing-agency-6rqw.vercel.app/sitemap.xml
